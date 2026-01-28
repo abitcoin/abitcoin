@@ -87,12 +87,30 @@ export default function Dashboard({ user, onLogout }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         {/* Welcome Section */}
         <div className="mb-12">
-          <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2" data-testid="welcome-message">
-            Welcome back, <span className="italic">{user?.name}</span>
-          </h1>
-          <p className="text-lg text-void/70 font-body tracking-wide">
-            Your dream sanctuary awaits
-          </p>
+          <div className="flex items-center justify-between flex-wrap gap-4">
+            <div>
+              <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2" data-testid="welcome-message">
+                Welcome back, <span className="italic">{user?.name}</span>
+              </h1>
+              <p className="text-lg text-void/70 font-body tracking-wide">
+                Your dream sanctuary awaits
+              </p>
+            </div>
+            {!user?.is_premium && (
+              <Button
+                onClick={() => navigate('/premium')}
+                className="bg-gradient-to-r from-ethereal to-lucid text-void hover:opacity-90 rounded-full px-6 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+                data-testid="upgrade-premium-button"
+              >
+                ✨ Upgrade to Premium
+              </Button>
+            )}
+            {user?.is_premium && (
+              <div className="px-6 py-3 bg-lucid/20 rounded-full border border-lucid/30" data-testid="premium-badge">
+                <span className="text-void font-body font-medium">✨ Premium Member</span>
+              </div>
+            )}
+          </div>
         </div>
 
         {loading ? (
