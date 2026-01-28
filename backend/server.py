@@ -99,6 +99,21 @@ class DreamStats(BaseModel):
     most_common_tags: List[dict]
     recent_dreams: List[Dream]
 
+class CheckoutRequest(BaseModel):
+    origin_url: str
+
+class PaymentTransaction(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    user_id: str
+    session_id: str
+    amount: float
+    currency: str
+    payment_status: str
+    metadata: Dict[str, str]
+    created_at: datetime
+    updated_at: datetime
+
 # Helper Functions
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
