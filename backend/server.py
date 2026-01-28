@@ -52,6 +52,7 @@ class User(BaseModel):
     email: str
     name: str
     is_premium: bool = False
+    ai_analysis_count: int = 0
     created_at: datetime
 
 class TokenResponse(BaseModel):
