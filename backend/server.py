@@ -167,6 +167,7 @@ async def signup(user_data: UserSignup):
         id=user_id,
         email=user_data.email,
         name=user_data.name,
+        is_premium=False,
         created_at=datetime.now(timezone.utc)
     )
     
