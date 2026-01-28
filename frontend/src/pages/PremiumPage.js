@@ -122,8 +122,11 @@ export default function PremiumPage({ user, onLogout }) {
             <br />of your dreams
           </h1>
           
-          <p className="text-lg text-void/70 font-body tracking-wide max-w-2xl mx-auto">
+          <p className="text-lg text-void/70 font-body tracking-wide max-w-2xl mx-auto mb-2">
             Upgrade to Premium and get unlimited AI-powered dream analysis with deep psychological insights
+          </p>
+          <p className="text-sm text-void/60 font-body">
+            ✨ All users get 5 free AI analyses to try it out!
           </p>
         </div>
 
