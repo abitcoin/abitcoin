@@ -170,6 +170,7 @@ async def signup(user_data: UserSignup):
         email=user_data.email,
         name=user_data.name,
         is_premium=False,
+        ai_analysis_count=0,
         created_at=datetime.now(timezone.utc)
     )
     
