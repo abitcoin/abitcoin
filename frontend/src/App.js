@@ -47,6 +47,8 @@ function App() {
           <Route path="/journal" element={token ? <DreamJournal user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/dreams" element={token ? <DreamsLibrary user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/dreams/:id" element={token ? <DreamDetail user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
+          <Route path="/premium" element={token ? <PremiumPage user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
+          <Route path="/payment-success" element={token ? <PaymentSuccess /> : <Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
