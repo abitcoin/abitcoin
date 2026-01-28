@@ -206,6 +206,7 @@ async def get_me(user_id: str = Depends(get_current_user)):
         email=user_doc["email"],
         name=user_doc["name"],
         is_premium=user_doc.get("is_premium", False),
+        ai_analysis_count=user_doc.get("ai_analysis_count", 0),
         created_at=datetime.fromisoformat(user_doc["created_at"])
     )
 
