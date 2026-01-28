@@ -528,7 +528,8 @@ async def create_checkout(
             "user_id": user_id,
             "package_id": package_id,
             "package_name": package["name"]
-        }
+        },
+        payment_methods=["card", "klarna"]
     )
     
     # Create checkout session
