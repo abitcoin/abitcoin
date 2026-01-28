@@ -32,6 +32,7 @@ function App() {
     localStorage.removeItem('user');
     setToken(null);
     setUser(null);
+    window.location.href = '/';
   };
 
   return (
