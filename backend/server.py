@@ -449,6 +449,162 @@ async def get_dream_stats(user_id: str = Depends(get_current_user)):
         recent_dreams=recent_dreams
     )
 
+# Payment Routes
+PREMIUM_PACKAGES = {
+    "monthly": {"amount": 9.99, "name": "Premium Monthly", "description": "AI dream analysis for 30 days"},
+    "lifetime": {"amount": 49.99, "name": "Premium Lifetime", "description": "Unlimited AI dream analysis forever"}
+}
+
+@api_router.post("/payments/checkout")
+async def create_checkout(
+    package_id: str,
+    checkout_req: CheckoutRequest,
+    user_id: str = Depends(get_current_user)
+):
+    # Validate package
+    if package_id not in PREMIUM_PACKAGES:
+        raise HTTPException(status_code=400, detail="Invalid package")
+    
+    package = PREMIUM_PACKAGES[package_id]
+    
+    # Initialize Stripe
+    stripe_api_key = os.environ.get('STRIPE_API_KEY')
+    webhook_url = f"{checkout_req.origin_url}/api/webhook/stripe"
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url=webhook_url)
+    
+    # Create success and cancel URLs
+    success_url = f"{checkout_req.origin_url}/payment-success?session_id={{CHECKOUT_SESSION_ID}}"
+    cancel_url = f"{checkout_req.origin_url}/dashboard"
+    
+    # Create checkout session request
+    session_request = CheckoutSessionRequest(
+        amount=package["amount"],
+        currency="usd",
+        success_url=success_url,
+        cancel_url=cancel_url,
+        metadata={
+            "user_id": user_id,
+            "package_id": package_id,
+            "package_name": package["name"]
+        }
+    )
+    
+    # Create checkout session
+    session = await stripe_checkout.create_checkout_session(session_request)
+    
+    # Store transaction in database
+    transaction_id = str(uuid.uuid4())
+    transaction_doc = {
+        "id": transaction_id,
+        "user_id": user_id,
+        "session_id": session.session_id,
+        "amount": package["amount"],
+        "currency": "usd",
+        "package_id": package_id,
+        "payment_status": "pending",
+        "metadata": session_request.metadata,
+        "created_at": datetime.now(timezone.utc).isoformat(),
+        "updated_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.payment_transactions.insert_one(transaction_doc)
+    
+    return {"url": session.url, "session_id": session.session_id}
+
+@api_router.get("/payments/status/{session_id}")
+async def check_payment_status(session_id: str, user_id: str = Depends(get_current_user)):
+    # Check if we already processed this payment
+    transaction = await db.payment_transactions.find_one({
+        "session_id": session_id,
+        "user_id": user_id
+    }, {"_id": 0})
+    
+    if not transaction:
+        raise HTTPException(status_code=404, detail="Transaction not found")
+    
+    # If already processed as paid, return cached status
+    if transaction.get("payment_status") == "paid":
+        return {
+            "status": "complete",
+            "payment_status": "paid",
+            "message": "Payment already processed"
+        }
+    
+    # Check with Stripe
+    stripe_api_key = os.environ.get('STRIPE_API_KEY')
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url="")
+    
+    try:
+        checkout_status = await stripe_checkout.get_checkout_status(session_id)
+        
+        # Update transaction status
+        await db.payment_transactions.update_one(
+            {"session_id": session_id},
+            {"$set": {
+                "payment_status": checkout_status.payment_status,
+                "updated_at": datetime.now(timezone.utc).isoformat()
+            }}
+        )
+        
+        # If payment successful and not yet processed, upgrade user to premium
+        if checkout_status.payment_status == "paid" and transaction.get("payment_status") != "paid":
+            await db.users.update_one(
+                {"id": user_id},
+                {"$set": {"is_premium": True}}
+            )
+        
+        return {
+            "status": checkout_status.status,
+            "payment_status": checkout_status.payment_status,
+            "amount": checkout_status.amount_total / 100,  # Convert from cents
+            "currency": checkout_status.currency
+        }
+    
+    except Exception as e:
+        logging.error(f"Payment status check error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Failed to check payment status: {str(e)}")
+
+@api_router.post("/webhook/stripe")
+async def stripe_webhook(request: Request):
+    stripe_api_key = os.environ.get('STRIPE_API_KEY')
+    stripe_checkout = StripeCheckout(api_key=stripe_api_key, webhook_url="")
+    
+    try:
+        body = await request.body()
+        signature = request.headers.get("Stripe-Signature")
+        
+        webhook_response = await stripe_checkout.handle_webhook(body, signature)
+        
+        # Process the webhook event
+        if webhook_response.payment_status == "paid":
+            user_id = webhook_response.metadata.get("user_id")
+            session_id = webhook_response.session_id
+            
+            # Check if already processed
+            transaction = await db.payment_transactions.find_one({"session_id": session_id}, {"_id": 0})
+            
+            if transaction and transaction.get("payment_status") != "paid":
+                # Update transaction
+                await db.payment_transactions.update_one(
+                    {"session_id": session_id},
+                    {"$set": {
+                        "payment_status": "paid",
+                        "updated_at": datetime.now(timezone.utc).isoformat()
+                    }}
+                )
+                
+                # Upgrade user to premium
+                await db.users.update_one(
+                    {"id": user_id},
+                    {"$set": {"is_premium": True}}
+                )
+        
+        return {"status": "success"}
+    
+    except Exception as e:
+        logging.error(f"Webhook error: {str(e)}")
+        raise HTTPException(status_code=400, detail=str(e))
+
 # Include the router in the main app
 app.include_router(api_router)
 
