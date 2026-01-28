@@ -159,6 +159,7 @@ async def signup(user_data: UserSignup):
         "password": hash_password(user_data.password),
         "name": user_data.name,
         "is_premium": False,
+        "ai_analysis_count": 0,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
