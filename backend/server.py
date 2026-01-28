@@ -157,6 +157,7 @@ async def signup(user_data: UserSignup):
         "email": user_data.email,
         "password": hash_password(user_data.password),
         "name": user_data.name,
+        "is_premium": False,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
