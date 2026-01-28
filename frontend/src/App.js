@@ -7,6 +7,8 @@ import Dashboard from "@/pages/Dashboard";
 import DreamJournal from "@/pages/DreamJournal";
 import DreamsLibrary from "@/pages/DreamsLibrary";
 import DreamDetail from "@/pages/DreamDetail";
+import PremiumPage from "@/pages/PremiumPage";
+import PaymentSuccess from "@/pages/PaymentSuccess";
 import "@/App.css";
 
 function App() {
