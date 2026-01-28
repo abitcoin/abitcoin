@@ -12,7 +12,7 @@ const PACKAGES = [
   {
     id: "monthly",
     name: "Premium Monthly",
-    price: 9.99,
+    price: 4.99,
     period: "/month",
     features: [
       "Unlimited AI dream analysis",
@@ -26,7 +26,7 @@ const PACKAGES = [
   {
     id: "lifetime",
     name: "Premium Lifetime",
-    price: 49.99,
+    price: 29.99,
     period: "one-time",
     features: [
       "Everything in Monthly",
