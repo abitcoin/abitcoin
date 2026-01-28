@@ -50,10 +50,20 @@ export default function DreamDetail({ user, onLogout }) {
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setDream({ ...dream, ai_analysis: response.data.analysis });
-      toast.success(response.data.cached ? "Analysis loaded" : "Analysis complete!");
+      
+      if (response.data.remaining_free !== null && response.data.remaining_free !== undefined) {
+        toast.success(
+          response.data.cached 
+            ? "Analysis loaded" 
+            : `Analysis complete! ${response.data.remaining_free} free analyses remaining`
+        );
+      } else {
+        toast.success(response.data.cached ? "Analysis loaded" : "Analysis complete!");
+      }
     } catch (error) {
       if (error.response?.status === 403) {
-        toast.error("Premium subscription required for AI analysis");
+        const message = error.response?.data?.detail || "Premium subscription required for AI analysis";
+        toast.error(message);
         setTimeout(() => navigate('/premium'), 1500);
       } else {
         toast.error(error.response?.data?.detail || "Analysis failed");
