@@ -186,11 +186,14 @@ export default function PremiumPage({ user, onLogout }) {
             <h2 className="text-3xl font-heading font-light text-void mb-4">
               Why <span className="italic">Premium?</span>
             </h2>
-            <p className="text-void/70 font-body max-w-2xl mx-auto leading-relaxed">
+            <p className="text-void/70 font-body max-w-2xl mx-auto leading-relaxed mb-6">
               Our AI dream analyst uses advanced psychology and symbolism knowledge to provide deep, 
               personalized insights into your dreams. Discover hidden meanings, emotional patterns, 
               and unlock the wisdom of your subconscious mind.
             </p>
+            <div className="flex items-center justify-center gap-2 text-sm text-void/60 font-body">
+              <span>💳 Payment options: Credit Card, Klarna</span>
+            </div>
           </div>
         </div>
       </div>
