@@ -51,6 +51,7 @@ class User(BaseModel):
     id: str
     email: str
     name: str
+    is_premium: bool = False
     created_at: datetime
 
 class TokenResponse(BaseModel):
