@@ -347,18 +347,39 @@ async def delete_dream(dream_id: str, user_id: str = Depends(get_current_user)):
     return {"message": "Dream deleted successfully"}
 
 # AI Analysis Route
+FREE_AI_ANALYSIS_LIMIT = 5
+ADMIN_EMAILS = []  # Owner gets unlimited access - will be set on first signup
+
 @api_router.post("/dreams/{dream_id}/analyze")
 async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user)):
-    # Check if user is premium
+    # Get user info
     user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
     if not user_doc:
         raise HTTPException(status_code=404, detail="User not found")
     
-    if not user_doc.get("is_premium", False):
-        raise HTTPException(
-            status_code=403,
-            detail="Premium subscription required. Please upgrade to access AI dream analysis."
+    # Check if user is the first registered user (owner) - automatic premium
+    first_user = await db.users.find_one({}, {"_id": 0}, sort=[("created_at", 1)])
+    is_owner = first_user and first_user["id"] == user_id
+    
+    # Owner gets automatic premium access
+    if is_owner and not user_doc.get("is_premium"):
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {"is_premium": True}}
         )
+        user_doc["is_premium"] = True
+    
+    # Check access: premium, owner, or under free limit
+    is_premium = user_doc.get("is_premium", False)
+    analysis_count = user_doc.get("ai_analysis_count", 0)
+    
+    if not is_premium and not is_owner:
+        if analysis_count >= FREE_AI_ANALYSIS_LIMIT:
+            remaining = 0
+            raise HTTPException(
+                status_code=403,
+                detail=f"Free AI analysis limit reached ({FREE_AI_ANALYSIS_LIMIT}/{FREE_AI_ANALYSIS_LIMIT}). Upgrade to Premium for unlimited access."
+            )
     
     dream_doc = await db.dreams.find_one({"id": dream_id, "user_id": user_id}, {"_id": 0})
     if not dream_doc:
@@ -366,7 +387,11 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
     
     # Check if already analyzed
     if dream_doc.get("ai_analysis"):
-        return {"analysis": dream_doc["ai_analysis"], "cached": True}
+        return {
+            "analysis": dream_doc["ai_analysis"], 
+            "cached": True,
+            "remaining_free": max(0, FREE_AI_ANALYSIS_LIMIT - analysis_count) if not is_premium else None
+        }
     
     try:
         # Use Gemini 3 Flash for analysis
@@ -389,7 +414,19 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
             {"$set": {"ai_analysis": analysis}}
         )
         
-        return {"analysis": analysis, "cached": False}
+        # Increment analysis count for non-premium users
+        if not is_premium and not is_owner:
+            await db.users.update_one(
+                {"id": user_id},
+                {"$inc": {"ai_analysis_count": 1}}
+            )
+            analysis_count += 1
+        
+        return {
+            "analysis": analysis, 
+            "cached": False,
+            "remaining_free": max(0, FREE_AI_ANALYSIS_LIMIT - analysis_count) if not is_premium else None
+        }
     
     except Exception as e:
         logging.error(f"AI Analysis error: {str(e)}")
