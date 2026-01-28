@@ -344,6 +344,17 @@ async def delete_dream(dream_id: str, user_id: str = Depends(get_current_user)):
 # AI Analysis Route
 @api_router.post("/dreams/{dream_id}/analyze")
 async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user)):
+    # Check if user is premium
+    user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user_doc.get("is_premium", False):
+        raise HTTPException(
+            status_code=403,
+            detail="Premium subscription required. Please upgrade to access AI dream analysis."
+        )
+    
     dream_doc = await db.dreams.find_one({"id": dream_id, "user_id": user_id}, {"_id": 0})
     if not dream_doc:
         raise HTTPException(status_code=404, detail="Dream not found")
