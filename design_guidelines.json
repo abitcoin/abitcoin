@@ -1,0 +1,163 @@
+{
+  "identity": {
+    "persona": "E1: The Anti-AI Designer",
+    "mission": "Create a poetic, surrealist dream-tracking experience that feels like a lucid dream.",
+    "principles": [
+      "Fusion over Imitation: Mix Dali-esque surrealism with modern SaaS utility.",
+      "Emotion First: Every interaction should feel 'floating' and 'ethereal'.",
+      "Content is King: Dreams are stories; the UI is the canvas.",
+      "Negative Space: Vast, open spaces to represent the infinite nature of dreams."
+    ]
+  },
+  "typography": {
+    "headings": {
+      "font_family": "Cormorant Garamond, serif",
+      "weights": ["Light (300)", "Regular (400)", "Italic"],
+      "usage": "All major headings (h1-h3). Use italics for emphasis to create a 'whispering' effect.",
+      "letter_spacing": "tracking-tight"
+    },
+    "body": {
+      "font_family": "Quicksand, sans-serif",
+      "weights": ["Regular (400)", "Medium (500)"],
+      "usage": "All body text, UI elements, and inputs. Rounded terminals match the soft aesthetic.",
+      "letter_spacing": "tracking-wide"
+    },
+    "installation": "Import from Google Fonts: @import url('https://fonts.googleapis.com/css2?family=Cormorant+Garamond:ital,wght@0,300;0,400;0,600;1,400&family=Quicksand:wght@300;400;500;600&display=swap');"
+  },
+  "colors": {
+    "palette": {
+      "primary": {
+        "name": "Ethereal Lavender",
+        "hex": "#E6E6FA",
+        "tailwind": "hsl(245, 50%, 90%)",
+        "usage": "Primary buttons (with dark text), active states, soft highlights."
+      },
+      "secondary": {
+        "name": "Lucid Mint",
+        "hex": "#98FF98",
+        "tailwind": "hsl(130, 100%, 85%)",
+        "usage": "Success states, secondary accents, dream tags."
+      },
+      "accent": {
+        "name": "Deep Void",
+        "hex": "#1A1A2E",
+        "tailwind": "hsl(240, 30%, 15%)",
+        "usage": "Text, borders, high-contrast elements to ground the ethereal design."
+      },
+      "background": {
+        "name": "Cloud White",
+        "hex": "#F8F9FD",
+        "tailwind": "hsl(220, 20%, 98%)",
+        "usage": "Main background."
+      },
+      "surface": {
+        "name": "Glass Mist",
+        "hex": "rgba(255, 255, 255, 0.6)",
+        "tailwind": "hsl(0, 0%, 100% / 0.6)",
+        "usage": "Cards, sidebars, headers (Glassmorphism)."
+      }
+    },
+    "gradients": {
+      "dream_haze": "bg-gradient-to-br from-purple-100 via-white to-green-100",
+      "night_sky": "bg-gradient-to-b from-[#1A1A2E] to-[#16213E]"
+    }
+  },
+  "visual_enhancers": {
+    "glassmorphism": {
+      "class": "bg-white/40 backdrop-blur-xl border border-white/50 shadow-sm",
+      "usage": "All cards, modals, and sticky headers."
+    },
+    "shadows": {
+      "soft": "shadow-[0_8px_30px_rgb(0,0,0,0.04)]",
+      "floating": "shadow-[0_20px_50px_rgba(8,_112,_184,_0.07)]"
+    },
+    "borders": {
+      "radius": "rounded-2xl",
+      "style": "border-white/60"
+    }
+  },
+  "layout_strategies": {
+    "journal_grid": {
+      "name": "The Tetris Grid",
+      "classes": "grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 auto-rows-[minmax(200px,auto)]",
+      "description": "Masonry-like feel. Dreams are not uniform; their containers shouldn't be either."
+    },
+    "hero_section": {
+      "name": "The Floating World",
+      "structure": "Overlap text over large, soft surrealist imagery. Use parallax if possible.",
+      "alignment": "Asymmetrical. Text bottom-left, Image top-right bleeding off screen."
+    }
+  },
+  "components": {
+    "buttons": {
+      "style": "rounded-full px-8 py-6 font-medium transition-all duration-300 hover:scale-105 active:scale-95",
+      "primary": "bg-[#1A1A2E] text-white hover:bg-[#1A1A2E]/90",
+      "secondary": "bg-white/50 text-[#1A1A2E] border border-[#1A1A2E]/10 hover:bg-white/80"
+    },
+    "cards": {
+      "style": "bg-white/40 backdrop-blur-md border border-white/60 rounded-3xl p-8 hover:shadow-lg transition-all duration-500 hover:-translate-y-1"
+    },
+    "inputs": {
+      "style": "bg-white/50 border-transparent focus:border-purple-200 focus:ring-2 focus:ring-purple-100/50 rounded-xl h-12"
+    }
+  },
+  "images": {
+    "hero_backgrounds": [
+      {
+        "url": "https://images.unsplash.com/photo-1766995247546-dcc1b267175c?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Dreamy pink moon skies",
+        "usage": "Landing Page Hero Background"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1763357616397-ef60d4622e59?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Iridescent clouds glowing",
+        "usage": "Auth Page Background"
+      }
+    ],
+    "surreal_elements": [
+      {
+        "url": "https://images.unsplash.com/photo-1729670942458-9c05994e5a41?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Surreal elephant detail",
+        "usage": "Dream Analysis Section Decor"
+      },
+      {
+        "url": "https://images.unsplash.com/photo-1693671826343-b6ed325da3f5?crop=entropy&cs=srgb&fm=jpg&q=85",
+        "alt": "Trees in water surreal",
+        "usage": "Empty State / 404 Page"
+      }
+    ]
+  },
+  "motion": {
+    "principles": [
+      "Everything floats. Use slow, continuous vertical oscillation for hero images.",
+      "Page transitions should be slow fades (0.5s+).",
+      "Hover states should feel magnetic and fluid."
+    ],
+    "classes": {
+      "float": "animate-float",
+      "fade_in": "animate-in fade-in duration-700 slide-in-from-bottom-4"
+    }
+  },
+  "universal_guidelines": {
+    "do_not": [
+      "DO NOT use generic 'Inter' font.",
+      "DO NOT use sharp corners (unless for specific brutalist contrast, but avoid here).",
+      "DO NOT use pure black (#000000). Use Deep Void (#1A1A2E).",
+      "DO NOT center everything. Use asymmetry to create tension."
+    ],
+    "must_do": [
+      "MUST use 'data-testid' on all interactive elements.",
+      "MUST ensure text contrast on pastel backgrounds (use Deep Void for text).",
+      "MUST use the specified image URLs for visual richness."
+    ]
+  },
+  "instructions_to_main_agent": [
+    "1. Update 'tailwind.config.js' to include the new colors (Ethereal Lavender, Lucid Mint, Deep Void) and fonts.",
+    "2. Install 'lucide-react' for icons if not present.",
+    "3. Create a 'Layout' component that wraps the app with the 'Cloud White' background and handles the global font application.",
+    "4. Build the 'Landing Page' first to establish the visual language (Hero with floating surreal image).",
+    "5. Use 'Glassmorphism' for the Login/Signup forms.",
+    "6. Implement the 'Dream Journal' using the 'Tetris Grid' layout.",
+    "7. Ensure the 'Dream Analysis' page uses the 'Surreal Elements' images to create a mystical atmosphere."
+  ]
+}
