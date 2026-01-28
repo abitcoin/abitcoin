@@ -52,7 +52,12 @@ export default function DreamDetail({ user, onLogout }) {
       setDream({ ...dream, ai_analysis: response.data.analysis });
       toast.success(response.data.cached ? "Analysis loaded" : "Analysis complete!");
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Analysis failed");
+      if (error.response?.status === 403) {
+        toast.error("Premium subscription required for AI analysis");
+        setTimeout(() => navigate('/premium'), 1500);
+      } else {
+        toast.error(error.response?.data?.detail || "Analysis failed");
+      }
     } finally {
       setAnalyzing(false);
     }
