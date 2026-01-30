@@ -485,6 +485,57 @@ async def rate_dream_analysis(
     
     return {"message": "Rating saved", "rating": rating_req.rating}
 
+# AI Artwork Generation Route
+@api_router.post("/dreams/{dream_id}/generate-artwork")
+async def generate_dream_artwork(dream_id: str, user_id: str = Depends(get_current_user)):
+    # Check if user is premium
+    user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user_doc:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user_doc.get("is_premium", False):
+        raise HTTPException(
+            status_code=403,
+            detail="AI Artwork is a premium feature. Please upgrade to access."
+        )
+    
+    dream_doc = await db.dreams.find_one({"id": dream_id, "user_id": user_id}, {"_id": 0})
+    if not dream_doc:
+        raise HTTPException(status_code=404, detail="Dream not found")
+    
+    try:
+        # Use Gemini Nano Banana for image generation
+        api_key = os.environ.get('EMERGENT_LLM_KEY')
+        chat = LlmChat(
+            api_key=api_key,
+            session_id=f"dream-artwork-{dream_id}",
+            system_message="You are a surrealist artist inspired by Salvador Dali. Create dreamlike, ethereal, and symbolic artwork."
+        ).with_model("gemini", "gemini-3-pro-image-preview").with_params(modalities=["image", "text"])
+        
+        # Create artistic prompt from dream
+        prompt = f"Create a surrealist, dreamlike artwork inspired by this dream: '{dream_doc['title']}'. The dream involves: {dream_doc['content'][:500]}. Use soft ethereal colors (lavender, mint green), dreamlike atmosphere, floating elements, and symbolic imagery in the style of Salvador Dali's melting clocks and elongated elephants."
+        
+        user_message = UserMessage(text=prompt)
+        
+        # Get response with image
+        text_response, images = await chat.send_message_multimodal_response(user_message)
+        
+        if images and len(images) > 0:
+            # Return the first generated image
+            image_data = images[0]
+            return {
+                "success": True,
+                "image": image_data['data'],  # Base64 encoded image
+                "mime_type": image_data['mime_type'],
+                "message": "Artwork generated successfully"
+            }
+        else:
+            raise HTTPException(status_code=500, detail="No image generated")
+    
+    except Exception as e:
+        logging.error(f"AI Artwork generation error: {str(e)}")
+        raise HTTPException(status_code=500, detail=f"Artwork generation failed: {str(e)}")
+
 # Statistics Route
 @api_router.get("/dreams/stats/overview", response_model=DreamStats)
 async def get_dream_stats(user_id: str = Depends(get_current_user)):
