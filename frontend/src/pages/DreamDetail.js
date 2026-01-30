@@ -343,6 +343,15 @@ export default function DreamDetail({ user, onLogout }) {
               <Button
                 variant="ghost"
                 size="icon"
+                onClick={() => setShowShareModal(true)}
+                className="text-void hover:text-void/80"
+                data-testid="share-button"
+              >
+                <Share2 className="w-4 h-4" />
+              </Button>
+              <Button
+                variant="ghost"
+                size="icon"
                 onClick={() => navigate(`/dreams/${id}/edit`)}
                 className="text-void hover:text-void/80"
                 data-testid="edit-button"
