@@ -24,7 +24,11 @@ export default function DreamDetail({ user, onLogout }) {
   const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
-    fetchDream();
+    if (sessionId) {
+      fetchDream();
+    } else {
+      navigate('/dreams');
+    }
   }, [id]);
 
   const fetchDream = async () => {
@@ -35,6 +39,7 @@ export default function DreamDetail({ user, onLogout }) {
       });
       setDream(response.data);
       setHumanAnalysis(response.data.human_analysis || "");
+      setRating(response.data.ai_analysis_rating || 0);
     } catch (error) {
       toast.error("Failed to load dream");
       navigate('/dreams');
