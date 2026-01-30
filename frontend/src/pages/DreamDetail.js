@@ -349,15 +349,6 @@ export default function DreamDetail({ user, onLogout }) {
               >
                 <Share2 className="w-4 h-4" />
               </Button>
-              <Button
-                variant="ghost"
-                size="icon"
-                onClick={() => navigate(`/dreams/${id}/edit`)}
-                className="text-void hover:text-void/80"
-                data-testid="edit-button"
-              >
-                <Edit2 className="w-4 h-4" />
-              </Button>
               <AlertDialog>
                 <AlertDialogTrigger asChild>
                   <Button
