@@ -290,8 +290,31 @@ export default function DreamDetail({ user, onLogout }) {
     }
     
     setGeneratingArtwork(true);
-    toast.info("AI Artwork generation coming soon!");
-    setTimeout(() => setGeneratingArtwork(false), 2000);
+    toast.info("Generating your dream artwork... This may take 20-30 seconds");
+    
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API}/dreams/${id}/generate-artwork`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      if (response.data.success && response.data.image) {
+        // Create and download the artwork
+        const imageData = `data:${response.data.mime_type};base64,${response.data.image}`;
+        const link = document.createElement('a');
+        link.download = `dreamwise-artwork-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+        link.href = imageData;
+        link.click();
+        
+        toast.success("AI Artwork generated and downloaded!");
+      }
+    } catch (error) {
+      toast.error(error.response?.data?.detail || "Failed to generate artwork");
+    } finally {
+      setGeneratingArtwork(false);
+    }
   };
 
   const handleSaveHumanAnalysis = async () => {
