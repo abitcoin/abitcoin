@@ -54,7 +54,7 @@ export default function DreamDetail({ user, onLogout }) {
       const token = localStorage.getItem('token');
       const response = await axios.post(
         `${API}/dreams/${id}/analyze`,
-        {},
+        { language: selectedLanguage },
         { headers: { Authorization: `Bearer ${token}` } }
       );
       setDream({ ...dream, ai_analysis: response.data.analysis });
@@ -78,6 +78,21 @@ export default function DreamDetail({ user, onLogout }) {
       }
     } finally {
       setAnalyzing(false);
+    }
+  };
+
+  const handleRating = async (newRating) => {
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${API}/dreams/${id}/rate`,
+        { rating: newRating },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      setRating(newRating);
+      toast.success("Rating saved!");
+    } catch (error) {
+      toast.error("Failed to save rating");
     }
   };
 
