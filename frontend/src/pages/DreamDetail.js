@@ -309,9 +309,37 @@ export default function DreamDetail({ user, onLogout }) {
           {dream.ai_analysis ? (
             <>
               <div className="prose prose-lg max-w-none mb-6">
-                <p className="text-void/80 font-body leading-relaxed whitespace-pre-wrap" data-testid="ai-analysis-content">
-                  {dream.ai_analysis}
-                </p>
+                {dream.ai_analysis.split('\n').map((paragraph, idx) => {
+                  // Check if line starts with ###
+                  if (paragraph.trim().startsWith('###')) {
+                    const text = paragraph.replace(/###/g, '').trim();
+                    return (
+                      <div key={idx} className="flex items-center gap-3 my-4">
+                        <Moon className="w-5 h-5 text-ethereal flex-shrink-0" />
+                        <h3 className="text-lg font-heading font-light text-void m-0">{text}</h3>
+                      </div>
+                    );
+                  }
+                  // Check if line starts with ##
+                  else if (paragraph.trim().startsWith('##')) {
+                    const text = paragraph.replace(/##/g, '').trim();
+                    return (
+                      <div key={idx} className="flex items-center gap-3 my-4">
+                        <Sparkles className="w-5 h-5 text-lucid flex-shrink-0" />
+                        <h2 className="text-xl font-heading font-light text-void m-0">{text}</h2>
+                      </div>
+                    );
+                  }
+                  // Regular paragraph
+                  else if (paragraph.trim()) {
+                    return (
+                      <p key={idx} className="text-void/80 font-body leading-relaxed mb-3">
+                        {paragraph}
+                      </p>
+                    );
+                  }
+                  return null;
+                })}
               </div>
               
               {/* Rating Section */}
