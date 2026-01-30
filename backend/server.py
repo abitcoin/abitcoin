@@ -95,6 +95,12 @@ class Dream(BaseModel):
 class AIAnalysisRequest(BaseModel):
     dream_id: str
 
+class AIAnalysisLanguageRequest(BaseModel):
+    language: str = "english"  # Default to English
+
+class DreamRatingRequest(BaseModel):
+    rating: int  # 1-5 stars
+
 class DreamStats(BaseModel):
     total_dreams: int
     dreams_this_week: int
