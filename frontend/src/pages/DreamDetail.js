@@ -583,6 +583,83 @@ export default function DreamDetail({ user, onLogout }) {
             </p>
           )}
         </div>
+
+        {/* Share Modal */}
+        {showShareModal && (
+          <div className="fixed inset-0 bg-void/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowShareModal(false)}>
+            <div className="glass-effect rounded-3xl p-8 max-w-md w-full" onClick={(e) => e.stopPropagation()} data-testid="share-modal">
+              <div className="flex items-center justify-between mb-6">
+                <h2 className="text-2xl font-heading font-light text-void">Share Your Dream</h2>
+                <button
+                  onClick={() => setShowShareModal(false)}
+                  className="text-void/60 hover:text-void transition-colors"
+                  data-testid="close-modal-button"
+                >
+                  ✕
+                </button>
+              </div>
+
+              {/* Preview */}
+              <div className="mb-6 p-4 bg-white/30 rounded-2xl">
+                <div className="flex items-center gap-3 mb-3">
+                  <Moon className="w-6 h-6 text-void" />
+                  <h3 className="font-heading font-light text-void">{dream.title}</h3>
+                </div>
+                <p className="text-sm text-void/70 font-body line-clamp-3">
+                  {dream.content.substring(0, 150)}...
+                </p>
+              </div>
+
+              {/* Share Options */}
+              <div className="space-y-3">
+                <Button
+                  onClick={handleShareCard}
+                  className="w-full bg-ethereal text-void hover:bg-ethereal/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+                  data-testid="share-card-button"
+                >
+                  <Share2 className="w-4 h-4 mr-2" />
+                  Share as Card Image
+                </Button>
+
+                <Button
+                  onClick={handleDownloadCard}
+                  variant="outline"
+                  className="w-full bg-white/50 text-void border-void/10 hover:bg-white/80 rounded-full h-12 font-body font-medium"
+                  data-testid="download-card-button"
+                >
+                  <Download className="w-4 h-4 mr-2" />
+                  Download Card
+                </Button>
+
+                {user?.is_premium && (
+                  <Button
+                    onClick={handleGenerateArtwork}
+                    disabled={generatingArtwork}
+                    className="w-full bg-lucid/20 text-void hover:bg-lucid/30 rounded-full h-12 font-body font-medium transition-all duration-300"
+                    data-testid="generate-artwork-button"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {generatingArtwork ? "Generating..." : "Generate AI Artwork (Premium)"}
+                  </Button>
+                )}
+
+                {!user?.is_premium && (
+                  <div className="text-center pt-2">
+                    <p className="text-xs text-void/60 font-body mb-2">
+                      Want AI-generated dream artwork?
+                    </p>
+                    <button
+                      onClick={() => navigate('/premium')}
+                      className="text-sm text-lucid hover:text-lucid/80 font-body underline"
+                    >
+                      Upgrade to Premium
+                    </button>
+                  </div>
+                )}
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </div>
   );
