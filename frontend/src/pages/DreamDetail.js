@@ -19,6 +19,9 @@ export default function DreamDetail({ user, onLogout }) {
   const [humanAnalysis, setHumanAnalysis] = useState("");
   const [editingHumanAnalysis, setEditingHumanAnalysis] = useState(false);
   const [savingAnalysis, setSavingAnalysis] = useState(false);
+  const [selectedLanguage, setSelectedLanguage] = useState("english");
+  const [rating, setRating] = useState(0);
+  const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
     fetchDream();
