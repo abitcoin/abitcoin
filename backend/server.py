@@ -398,7 +398,6 @@ async def analyze_dream(
     
     if not is_premium and not is_owner:
         if analysis_count >= FREE_AI_ANALYSIS_LIMIT:
-            remaining = 0
             raise HTTPException(
                 status_code=403,
                 detail=f"Free AI analysis limit reached ({FREE_AI_ANALYSIS_LIMIT}/{FREE_AI_ANALYSIS_LIMIT}). Upgrade to Premium for unlimited access."
