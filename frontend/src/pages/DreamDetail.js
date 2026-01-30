@@ -22,6 +22,8 @@ export default function DreamDetail({ user, onLogout }) {
   const [selectedLanguage, setSelectedLanguage] = useState("english");
   const [rating, setRating] = useState(0);
   const [hoverRating, setHoverRating] = useState(0);
+  const [showShareModal, setShowShareModal] = useState(false);
+  const [generatingArtwork, setGeneratingArtwork] = useState(false);
 
   useEffect(() => {
     if (id) {
