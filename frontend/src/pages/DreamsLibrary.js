@@ -177,8 +177,12 @@ export default function DreamsLibrary({ user, onLogout }) {
                     onClick={() => toggleTag(tag)}
                     className={`px-4 py-2 rounded-full font-body text-sm transition-all duration-300 ${
                       selectedTags.includes(tag)
-                        ? 'bg-lucid text-void'
-                        : 'bg-white/30 text-void/70 hover:bg-white/50'
+                        ? tag === 'nightmare'
+                          ? 'bg-red-500/80 text-white'
+                          : 'bg-lucid text-void'
+                        : tag === 'nightmare'
+                          ? 'bg-red-100 text-red-700 hover:bg-red-200'
+                          : 'bg-white/30 text-void/70 hover:bg-white/50'
                     }`}
                     data-testid={`filter-tag-${tag}`}
                   >
