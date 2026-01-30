@@ -278,28 +278,75 @@ export default function DreamDetail({ user, onLogout }) {
             <h2 className="text-2xl font-heading font-light text-void" data-testid="ai-analysis-title">
               AI <span className="italic">Analysis</span>
             </h2>
-            {!dream.ai_analysis && (
-              <Button
-                onClick={handleAIAnalysis}
-                disabled={analyzing}
-                className="bg-ethereal text-void hover:bg-ethereal/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
-                data-testid="analyze-button"
-              >
-                <Sparkles className="w-4 h-4 mr-2" />
-                {analyzing ? "Analyzing..." : "Analyze Dream"}
-              </Button>
-            )}
+            <div className="flex items-center gap-4">
+              {!dream.ai_analysis && (
+                <>
+                  <select
+                    value={selectedLanguage}
+                    onChange={(e) => setSelectedLanguage(e.target.value)}
+                    className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl px-4 py-2 font-body text-void"
+                    data-testid="language-select"
+                  >
+                    <option value="english">English</option>
+                    <option value="finnish">Suomi</option>
+                    <option value="french">Français</option>
+                    <option value="german">Deutsch</option>
+                  </select>
+                  <Button
+                    onClick={handleAIAnalysis}
+                    disabled={analyzing}
+                    className="bg-ethereal text-void hover:bg-ethereal/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+                    data-testid="analyze-button"
+                  >
+                    <Sparkles className="w-4 h-4 mr-2" />
+                    {analyzing ? "Analyzing..." : "Analyze Dream"}
+                  </Button>
+                </>
+              )}
+            </div>
           </div>
 
           {dream.ai_analysis ? (
-            <div className="prose prose-lg max-w-none">
-              <p className="text-void/80 font-body leading-relaxed whitespace-pre-wrap" data-testid="ai-analysis-content">
-                {dream.ai_analysis}
-              </p>
-            </div>
+            <>
+              <div className="prose prose-lg max-w-none mb-6">
+                <p className="text-void/80 font-body leading-relaxed whitespace-pre-wrap" data-testid="ai-analysis-content">
+                  {dream.ai_analysis}
+                </p>
+              </div>
+              
+              {/* Rating Section */}
+              <div className="border-t border-white/30 pt-6">
+                <div className="flex items-center justify-between">
+                  <p className="text-sm text-void/70 font-body">Rate this analysis:</p>
+                  <div className="flex items-center gap-1">
+                    {[1, 2, 3, 4, 5].map((star) => (
+                      <button
+                        key={star}
+                        onClick={() => handleRating(star)}
+                        onMouseEnter={() => setHoverRating(star)}
+                        onMouseLeave={() => setHoverRating(0)}
+                        className="transition-all duration-200 hover:scale-110"
+                        data-testid={`star-${star}`}
+                      >
+                        <Star
+                          className={`w-6 h-6 ${
+                            star <= (hoverRating || rating)
+                              ? 'fill-lucid text-lucid'
+                              : 'text-void/30'
+                          }`}
+                        />
+                      </button>
+                    ))}
+                    {rating > 0 && (
+                      <span className="ml-2 text-sm text-void/60 font-body">({rating}/5)</span>
+                    )}
+                  </div>
+                </div>
+              </div>
+            </>
           ) : (
             <p className="text-void/60 font-body text-center py-8" data-testid="no-ai-analysis">
-              Click "Analyze Dream" to get AI insights
+              Select a language and click "Analyze Dream" to get AI insights
             </p>
           )}
         </div>
