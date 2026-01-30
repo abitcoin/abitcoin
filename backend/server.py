@@ -86,6 +86,8 @@ class Dream(BaseModel):
     date: datetime
     tags: List[str]
     ai_analysis: Optional[str] = None
+    ai_analysis_language: Optional[str] = None
+    ai_analysis_rating: Optional[int] = None
     human_analysis: Optional[str] = None
     created_at: datetime
     updated_at: datetime
