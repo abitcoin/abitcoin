@@ -493,7 +493,7 @@ async def get_dream_stats(user_id: str = Depends(get_current_user)):
 
 # Payment Routes
 PREMIUM_PACKAGES = {
-    "monthly": {"amount": 4.99, "name": "Premium Monthly", "description": "AI dream analysis for 30 days"},
+    "monthly": {"amount": 9.99, "name": "Premium Monthly", "description": "AI dream analysis for 30 days"},
     "lifetime": {"amount": 29.99, "name": "Premium Lifetime", "description": "Unlimited AI dream analysis forever"}
 }
 
