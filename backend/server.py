@@ -358,8 +358,23 @@ async def delete_dream(dream_id: str, user_id: str = Depends(get_current_user)):
 FREE_AI_ANALYSIS_LIMIT = 5
 ADMIN_EMAILS = []  # Owner gets unlimited access - will be set on first signup
 
+LANGUAGE_PROMPTS = {
+    "english": "You are a compassionate dream analyst with expertise in psychology and symbolism. Provide thoughtful, insightful analysis of dreams in English, exploring potential meanings, symbols, and emotional themes. Be poetic and empathetic in your interpretations.",
+    "finnish": "Olet myötätuntoinen unien analysoija, jolla on asiantuntemusta psykologiasta ja symboliikasta. Anna ajattelevia, oivaltavia analyysejä unista suomeksi, tutkien mahdollisia merkityksiä, symboleja ja tunneteemoja. Ole runollinen ja empaattinen tulkinnoissasi.",
+    "french": "Vous êtes un analyste de rêves compatissant avec une expertise en psychologie et en symbolisme. Fournissez une analyse réfléchie et perspicace des rêves en français, en explorant les significations potentielles, les symboles et les thèmes émotionnels. Soyez poétique et empathique dans vos interprétations.",
+    "german": "Sie sind ein mitfühlender Traumanalytiker mit Fachkenntnissen in Psychologie und Symbolik. Bieten Sie durchdachte, aufschlussreiche Analysen von Träumen auf Deutsch an und erkunden Sie potenzielle Bedeutungen, Symbole und emotionale Themen. Seien Sie poetisch und einfühlsam in Ihren Interpretationen."
+}
+
 @api_router.post("/dreams/{dream_id}/analyze")
-async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user)):
+async def analyze_dream(
+    dream_id: str,
+    language_req: AIAnalysisLanguageRequest,
+    user_id: str = Depends(get_current_user)
+):
+    language = language_req.language.lower()
+    if language not in LANGUAGE_PROMPTS:
+        language = "english"
+    
     # Get user info
     user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
     if not user_doc:
@@ -393,21 +408,24 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
     if not dream_doc:
         raise HTTPException(status_code=404, detail="Dream not found")
     
-    # Check if already analyzed
-    if dream_doc.get("ai_analysis"):
+    # Check if already analyzed in this language
+    if dream_doc.get("ai_analysis") and dream_doc.get("ai_analysis_language") == language:
         return {
             "analysis": dream_doc["ai_analysis"], 
+            "language": language,
             "cached": True,
             "remaining_free": max(0, FREE_AI_ANALYSIS_LIMIT - analysis_count) if not is_premium else None
         }
     
     try:
-        # Use Gemini 3 Flash for analysis
+        # Use Gemini 3 Flash for analysis with language-specific prompt
         api_key = os.environ.get('EMERGENT_LLM_KEY')
+        system_message = LANGUAGE_PROMPTS[language]
+        
         chat = LlmChat(
             api_key=api_key,
-            session_id=f"dream-analysis-{dream_id}",
-            system_message="You are a compassionate dream analyst with expertise in psychology and symbolism. Provide thoughtful, insightful analysis of dreams, exploring potential meanings, symbols, and emotional themes. Be poetic and empathetic in your interpretations."
+            session_id=f"dream-analysis-{dream_id}-{language}",
+            system_message=system_message
         ).with_model("gemini", "gemini-3-flash-preview")
         
         user_message = UserMessage(
@@ -416,10 +434,13 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
         
         analysis = await chat.send_message(user_message)
         
-        # Store the analysis
+        # Store the analysis with language
         await db.dreams.update_one(
             {"id": dream_id},
-            {"$set": {"ai_analysis": analysis}}
+            {"$set": {
+                "ai_analysis": analysis,
+                "ai_analysis_language": language
+            }}
         )
         
         # Increment analysis count for non-premium users
@@ -431,7 +452,8 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
             analysis_count += 1
         
         return {
-            "analysis": analysis, 
+            "analysis": analysis,
+            "language": language,
             "cached": False,
             "remaining_free": max(0, FREE_AI_ANALYSIS_LIMIT - analysis_count) if not is_premium else None
         }
@@ -439,6 +461,29 @@ async def analyze_dream(dream_id: str, user_id: str = Depends(get_current_user))
     except Exception as e:
         logging.error(f"AI Analysis error: {str(e)}")
         raise HTTPException(status_code=500, detail=f"Analysis failed: {str(e)}")
+
+# Rating Route
+@api_router.post("/dreams/{dream_id}/rate")
+async def rate_dream_analysis(
+    dream_id: str,
+    rating_req: DreamRatingRequest,
+    user_id: str = Depends(get_current_user)
+):
+    # Validate rating
+    if rating_req.rating < 1 or rating_req.rating > 5:
+        raise HTTPException(status_code=400, detail="Rating must be between 1 and 5")
+    
+    dream_doc = await db.dreams.find_one({"id": dream_id, "user_id": user_id}, {"_id": 0})
+    if not dream_doc:
+        raise HTTPException(status_code=404, detail="Dream not found")
+    
+    # Update rating
+    await db.dreams.update_one(
+        {"id": dream_id},
+        {"$set": {"ai_analysis_rating": rating_req.rating}}
+    )
+    
+    return {"message": "Rating saved", "rating": rating_req.rating}
 
 # Statistics Route
 @api_router.get("/dreams/stats/overview", response_model=DreamStats)
