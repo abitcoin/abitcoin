@@ -102,57 +102,119 @@ export default function DreamDetail({ user, onLogout }) {
     const canvas = document.createElement('canvas');
     const ctx = canvas.getContext('2d');
     
-    // Set canvas size
-    canvas.width = 1200;
-    canvas.height = 630;
+    // Set canvas size for social media (Instagram post size)
+    canvas.width = 1080;
+    canvas.height = 1080;
     
-    // Gradient background
-    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    // Beautiful gradient background (ethereal lavender to lucid green)
+    const gradient = ctx.createLinearGradient(0, 0, 0, canvas.height);
     gradient.addColorStop(0, '#E6E6FA');
+    gradient.addColorStop(0.5, '#D8BFD8');
     gradient.addColorStop(1, '#98FF98');
     ctx.fillStyle = gradient;
     ctx.fillRect(0, 0, canvas.width, canvas.height);
     
-    // Add subtle pattern overlay
-    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
-    for (let i = 0; i < 50; i++) {
+    // Add dreamy stars pattern
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.3)';
+    for (let i = 0; i < 80; i++) {
+      const x = Math.random() * canvas.width;
+      const y = Math.random() * canvas.height;
+      const radius = Math.random() * 2 + 1;
       ctx.beginPath();
-      ctx.arc(
-        Math.random() * canvas.width,
-        Math.random() * canvas.height,
-        Math.random() * 3,
-        0,
-        Math.PI * 2
-      );
+      ctx.arc(x, y, radius, 0, Math.PI * 2);
       ctx.fill();
     }
     
-    // Add moon icon (circle)
-    ctx.fillStyle = '#1A1A2E';
+    // Main card container (white rounded rectangle)
+    const cardPadding = 80;
+    const cardX = cardPadding;
+    const cardY = cardPadding + 100;
+    const cardWidth = canvas.width - (cardPadding * 2);
+    const cardHeight = canvas.height - (cardPadding * 2) - 200;
+    const cardRadius = 40;
+    
+    // Card shadow
+    ctx.shadowColor = 'rgba(26, 26, 46, 0.15)';
+    ctx.shadowBlur = 30;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 15;
+    
+    // Draw card background
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.95)';
     ctx.beginPath();
-    ctx.arc(100, 100, 40, 0, Math.PI * 2);
+    ctx.roundRect(cardX, cardY, cardWidth, cardHeight, cardRadius);
     ctx.fill();
     
-    // Add title
+    // Reset shadow
+    ctx.shadowColor = 'transparent';
+    ctx.shadowBlur = 0;
+    ctx.shadowOffsetX = 0;
+    ctx.shadowOffsetY = 0;
+    
+    // Top decoration - Moon and stars
     ctx.fillStyle = '#1A1A2E';
-    ctx.font = 'bold 60px serif';
-    ctx.textAlign = 'left';
-    const titleText = dream.title.length > 40 ? dream.title.substring(0, 40) + '...' : dream.title;
-    ctx.fillText(titleText, 80, 250);
+    ctx.beginPath();
+    ctx.arc(canvas.width / 2, 120, 50, 0, Math.PI * 2);
+    ctx.fill();
     
-    // Add dream snippet
+    // Small stars around moon
+    const moonStars = [
+      { x: canvas.width / 2 - 100, y: 100 },
+      { x: canvas.width / 2 + 100, y: 100 },
+      { x: canvas.width / 2 - 70, y: 150 }
+    ];
+    moonStars.forEach(star => {
+      ctx.fillStyle = '#98FF98';
+      ctx.beginPath();
+      for (let i = 0; i < 5; i++) {
+        const angle = (i * 4 * Math.PI) / 5 - Math.PI / 2;
+        const x = star.x + Math.cos(angle) * 8;
+        const y = star.y + Math.sin(angle) * 8;
+        if (i === 0) ctx.moveTo(x, y);
+        else ctx.lineTo(x, y);
+      }
+      ctx.closePath();
+      ctx.fill();
+    });
+    
+    // Date badge (top right of card)
+    const dateText = formatDate(dream.date);
+    ctx.font = '24px sans-serif';
+    ctx.fillStyle = 'rgba(26, 26, 46, 0.4)';
+    ctx.textAlign = 'right';
+    ctx.fillText(dateText, cardX + cardWidth - 40, cardY + 60);
+    
+    // Title
+    ctx.font = 'italic 600 56px serif';
+    ctx.fillStyle = '#1A1A2E';
+    ctx.textAlign = 'center';
+    
+    const titleText = dream.title.length > 35 ? dream.title.substring(0, 35) + '...' : dream.title;
+    ctx.fillText(titleText, canvas.width / 2, cardY + 140);
+    
+    // Decorative line under title
+    ctx.strokeStyle = '#98FF98';
+    ctx.lineWidth = 3;
+    ctx.beginPath();
+    ctx.moveTo(canvas.width / 2 - 150, cardY + 170);
+    ctx.lineTo(canvas.width / 2 + 150, cardY + 170);
+    ctx.stroke();
+    
+    // Dream content
     ctx.font = '32px sans-serif';
-    ctx.fillStyle = 'rgba(26, 26, 46, 0.7)';
-    const words = dream.content.split(' ').slice(0, 30).join(' ');
-    const snippet = words.length > 150 ? words.substring(0, 150) + '...' : words;
+    ctx.fillStyle = 'rgba(26, 26, 46, 0.8)';
+    ctx.textAlign = 'left';
     
-    // Word wrap
-    const maxWidth = canvas.width - 160;
-    const lineHeight = 45;
+    const contentText = dream.content.length > 300 ? dream.content.substring(0, 300) + '...' : dream.content;
+    
+    // Word wrap for content
+    const maxWidth = cardWidth - 100;
+    const lineHeight = 48;
+    const startY = cardY + 240;
     const lines = [];
     let currentLine = '';
     
-    snippet.split(' ').forEach(word => {
+    contentText.split(' ').forEach(word => {
       const testLine = currentLine + word + ' ';
       const metrics = ctx.measureText(testLine);
       if (metrics.width > maxWidth && currentLine !== '') {
@@ -164,20 +226,24 @@ export default function DreamDetail({ user, onLogout }) {
     });
     lines.push(currentLine);
     
-    lines.slice(0, 5).forEach((line, i) => {
-      ctx.fillText(line, 80, 330 + (i * lineHeight));
+    // Draw content lines (max 8 lines)
+    lines.slice(0, 8).forEach((line, i) => {
+      ctx.fillText(line.trim(), cardX + 50, startY + (i * lineHeight));
     });
     
-    // Add date
+    // Bottom section - Branding
+    const bottomY = cardY + cardHeight - 70;
+    
+    // DreamWise logo text
+    ctx.font = 'italic 400 48px serif';
+    ctx.fillStyle = '#1A1A2E';
+    ctx.textAlign = 'center';
+    ctx.fillText('DreamWise', canvas.width / 2, bottomY);
+    
+    // Tagline
     ctx.font = '24px sans-serif';
     ctx.fillStyle = 'rgba(26, 26, 46, 0.5)';
-    ctx.fillText(formatDate(dream.date), 80, canvas.height - 60);
-    
-    // Add branding
-    ctx.font = 'italic 28px serif';
-    ctx.fillStyle = 'rgba(26, 26, 46, 0.6)';
-    ctx.textAlign = 'right';
-    ctx.fillText('DreamWise', canvas.width - 80, canvas.height - 60);
+    ctx.fillText('Explore your dreams', canvas.width / 2, bottomY + 35);
     
     return canvas;
   };
