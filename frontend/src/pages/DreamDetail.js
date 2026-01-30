@@ -24,7 +24,7 @@ export default function DreamDetail({ user, onLogout }) {
   const [hoverRating, setHoverRating] = useState(0);
 
   useEffect(() => {
-    if (sessionId) {
+    if (id) {
       fetchDream();
     } else {
       navigate('/dreams');
