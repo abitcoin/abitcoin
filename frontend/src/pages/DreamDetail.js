@@ -369,6 +369,16 @@ export default function DreamDetail({ user, onLogout }) {
                 >
                   My Dreams
                 </Button>
+                {!user?.is_premium && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate('/premium')}
+                    className="font-body text-lucid hover:text-lucid/80 font-medium"
+                    data-testid="nav-premium"
+                  >
+                    ✨ Premium
+                  </Button>
+                )}
               </div>
             </div>
             <Button
