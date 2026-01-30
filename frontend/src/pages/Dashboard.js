@@ -59,6 +59,16 @@ export default function Dashboard({ user, onLogout }) {
                 >
                   My Dreams
                 </Button>
+                {!user?.is_premium && (
+                  <Button
+                    variant="ghost"
+                    onClick={() => navigate('/premium')}
+                    className="font-body text-lucid hover:text-lucid/80 font-medium"
+                    data-testid="nav-premium"
+                  >
+                    ✨ Premium
+                  </Button>
+                )}
               </div>
             </div>
             <div className="flex items-center gap-4">
