@@ -98,6 +98,136 @@ export default function DreamDetail({ user, onLogout }) {
     }
   };
 
+  const generateCardImage = () => {
+    const canvas = document.createElement('canvas');
+    const ctx = canvas.getContext('2d');
+    
+    // Set canvas size
+    canvas.width = 1200;
+    canvas.height = 630;
+    
+    // Gradient background
+    const gradient = ctx.createLinearGradient(0, 0, canvas.width, canvas.height);
+    gradient.addColorStop(0, '#E6E6FA');
+    gradient.addColorStop(1, '#98FF98');
+    ctx.fillStyle = gradient;
+    ctx.fillRect(0, 0, canvas.width, canvas.height);
+    
+    // Add subtle pattern overlay
+    ctx.fillStyle = 'rgba(255, 255, 255, 0.1)';
+    for (let i = 0; i < 50; i++) {
+      ctx.beginPath();
+      ctx.arc(
+        Math.random() * canvas.width,
+        Math.random() * canvas.height,
+        Math.random() * 3,
+        0,
+        Math.PI * 2
+      );
+      ctx.fill();
+    }
+    
+    // Add moon icon (circle)
+    ctx.fillStyle = '#1A1A2E';
+    ctx.beginPath();
+    ctx.arc(100, 100, 40, 0, Math.PI * 2);
+    ctx.fill();
+    
+    // Add title
+    ctx.fillStyle = '#1A1A2E';
+    ctx.font = 'bold 60px serif';
+    ctx.textAlign = 'left';
+    const titleText = dream.title.length > 40 ? dream.title.substring(0, 40) + '...' : dream.title;
+    ctx.fillText(titleText, 80, 250);
+    
+    // Add dream snippet
+    ctx.font = '32px sans-serif';
+    ctx.fillStyle = 'rgba(26, 26, 46, 0.7)';
+    const words = dream.content.split(' ').slice(0, 30).join(' ');
+    const snippet = words.length > 150 ? words.substring(0, 150) + '...' : words;
+    
+    // Word wrap
+    const maxWidth = canvas.width - 160;
+    const lineHeight = 45;
+    const lines = [];
+    let currentLine = '';
+    
+    snippet.split(' ').forEach(word => {
+      const testLine = currentLine + word + ' ';
+      const metrics = ctx.measureText(testLine);
+      if (metrics.width > maxWidth && currentLine !== '') {
+        lines.push(currentLine);
+        currentLine = word + ' ';
+      } else {
+        currentLine = testLine;
+      }
+    });
+    lines.push(currentLine);
+    
+    lines.slice(0, 5).forEach((line, i) => {
+      ctx.fillText(line, 80, 330 + (i * lineHeight));
+    });
+    
+    // Add date
+    ctx.font = '24px sans-serif';
+    ctx.fillStyle = 'rgba(26, 26, 46, 0.5)';
+    ctx.fillText(formatDate(dream.date), 80, canvas.height - 60);
+    
+    // Add branding
+    ctx.font = 'italic 28px serif';
+    ctx.fillStyle = 'rgba(26, 26, 46, 0.6)';
+    ctx.textAlign = 'right';
+    ctx.fillText('DreamWise', canvas.width - 80, canvas.height - 60);
+    
+    return canvas;
+  };
+
+  const handleDownloadCard = () => {
+    const canvas = generateCardImage();
+    const link = document.createElement('a');
+    link.download = `dreamwise-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+    link.href = canvas.toDataURL('image/png');
+    link.click();
+    toast.success("Card downloaded!");
+  };
+
+  const handleShareCard = async () => {
+    const canvas = generateCardImage();
+    
+    canvas.toBlob(async (blob) => {
+      const file = new File([blob], 'dream-card.png', { type: 'image/png' });
+      
+      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+        try {
+          await navigator.share({
+            files: [file],
+            title: dream.title,
+            text: `Check out my dream: ${dream.title}`
+          });
+          toast.success("Shared successfully!");
+        } catch (error) {
+          if (error.name !== 'AbortError') {
+            handleDownloadCard();
+          }
+        }
+      } else {
+        handleDownloadCard();
+      }
+    });
+  };
+
+  const handleGenerateArtwork = async () => {
+    if (!user?.is_premium) {
+      toast.error("AI Artwork is a premium feature");
+      setTimeout(() => navigate('/premium'), 1500);
+      return;
+    }
+    
+    setGeneratingArtwork(true);
+    toast.info("AI Artwork generation coming soon!");
+    setTimeout(() => setGeneratingArtwork(false), 2000);
+  };
+
   const handleSaveHumanAnalysis = async () => {
     setSavingAnalysis(true);
     try {
