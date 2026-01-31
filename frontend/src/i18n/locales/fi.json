@@ -17,6 +17,10 @@
     "startDreaming": "Aloita uneksiminen",
     "getStarted": "Aloita"
   },
+  "footer": {
+    "copyright": "© 2025 DreamWise. Kaikki unet pidätetään.",
+    "allDreamsReserved": "Kaikki unet pidätetään"
+  },
   "auth": {
     "welcomeBack": "Tervetuloa Takaisin",
     "createAccount": "Luo Tili",
