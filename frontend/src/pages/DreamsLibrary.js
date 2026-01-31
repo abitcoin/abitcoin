@@ -89,15 +89,15 @@ export default function DreamsLibrary({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
                   onClick={() => navigate('/dreams')}
-                  className="font-body text-void hover:text-void/80"
+                  className="font-body text-lucid hover:text-lucid/80 font-medium"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -105,7 +105,7 @@ export default function DreamsLibrary({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -114,19 +114,20 @@ export default function DreamsLibrary({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
               <Button
                 onClick={() => navigate('/journal')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="new-dream-button"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                New Dream
+                {t('nav.newDream')}
               </Button>
               <Button
                 variant="ghost"
@@ -145,10 +146,10 @@ export default function DreamsLibrary({ user, onLogout }) {
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2" data-testid="library-title">
-            Your <span className="italic">Dream Library</span>
+            <span className="italic">{t('dreams.title')}</span>
           </h1>
           <p className="text-lg text-void/70 font-body tracking-wide">
-            Explore your collection of dreams
+            {t('dreams.subtitle')}
           </p>
         </div>
 
@@ -159,7 +160,7 @@ export default function DreamsLibrary({ user, onLogout }) {
               <Search className="absolute left-4 top-1/2 transform -translate-y-1/2 w-5 h-5 text-void/40" />
               <Input
                 type="text"
-                placeholder="Search dreams..."
+                placeholder={t('dreams.search')}
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl h-12 pl-12"
@@ -173,7 +174,7 @@ export default function DreamsLibrary({ user, onLogout }) {
               data-testid="filter-button"
             >
               <Filter className="w-4 h-4 mr-2" />
-              Filters {selectedTags.length > 0 && `(${selectedTags.length})`}
+              {t('dreams.filterByTags')} {selectedTags.length > 0 && `(${selectedTags.length})`}
             </Button>
           </div>
 
@@ -207,7 +208,7 @@ export default function DreamsLibrary({ user, onLogout }) {
                     className="px-4 py-2 rounded-full font-body text-sm bg-void/10 text-void hover:bg-void/20 transition-all"
                     data-testid="clear-filters-button"
                   >
-                    Clear All
+                    {t('common.cancel')}
                   </button>
                 )}
               </div>
@@ -218,14 +219,12 @@ export default function DreamsLibrary({ user, onLogout }) {
         {/* Dreams Grid */}
         {loading ? (
           <div className="text-center py-12" data-testid="loading-dreams">
-            <p className="text-void/60 font-body">Loading dreams...</p>
+            <p className="text-void/60 font-body">{t('common.loading')}</p>
           </div>
         ) : dreams.length === 0 ? (
           <div className="glass-effect rounded-3xl p-12 text-center" data-testid="no-dreams">
             <p className="text-void/60 font-body mb-4">
-              {searchQuery || selectedTags.length > 0
-                ? "No dreams match your filters"
-                : "You haven't recorded any dreams yet"}
+              {t('dreams.noDreams')}
             </p>
             {!searchQuery && selectedTags.length === 0 && (
               <Button
@@ -233,7 +232,7 @@ export default function DreamsLibrary({ user, onLogout }) {
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body"
                 data-testid="start-recording-button"
               >
-                Record Your First Dream
+                {t('dreams.startJourney')}
               </Button>
             )}
           </div>
