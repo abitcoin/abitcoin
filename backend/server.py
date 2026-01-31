@@ -86,12 +86,40 @@ class Dream(BaseModel):
     content: str
     date: datetime
     tags: List[str]
+    is_public: bool = False
+    likes_count: int = 0
     ai_analysis: Optional[str] = None
     ai_analysis_language: Optional[str] = None
     ai_analysis_rating: Optional[int] = None
     human_analysis: Optional[str] = None
     created_at: datetime
     updated_at: datetime
+
+class Comment(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    dream_id: str
+    user_id: str
+    user_name: str
+    content: str
+    created_at: datetime
+
+class DreamCircle(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    name: str
+    description: str
+    creator_id: str
+    creator_name: str
+    member_ids: List[str]
+    member_count: int
+    is_private: bool = False
+    created_at: datetime
+
+class CreateCircleRequest(BaseModel):
+    name: str
+    description: str
+    is_private: bool = False
 
 class AIAnalysisRequest(BaseModel):
     dream_id: str
