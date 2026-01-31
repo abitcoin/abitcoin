@@ -60,13 +60,6 @@ export default function LandingPage() {
               >
                 {t('landing.startDreaming')}
               </Button>
-              <Button
-                variant="outline"
-                className="bg-white/50 text-void border-void/10 hover:bg-white/80 rounded-full px-8 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
-                data-testid="learn-more-button"
-              >
-                {t('landing.learnMore')}
-              </Button>
             </div>
           </div>
 
