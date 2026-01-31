@@ -213,16 +213,16 @@
   },
   "messages": {
     "title": "Viestit",
-    "subtitle": "Yhdistä unelmoijien kanssa",
+    "subtitle": "Keskustele muiden uneksijien kanssa",
     "noConversations": "Ei keskusteluja",
     "startChat": "Aloita keskustelu",
-    "searchPlaceholder": "Etsi unelmoijia...",
+    "searchPlaceholder": "Etsi uneksijia...",
     "typePlaceholder": "Kirjoita viesti...",
     "send": "Lähetä",
     "back": "Takaisin",
     "unread": "lukematonta",
     "noMessages": "Ei viestejä. Sano hei!",
     "searchResults": "Hakutulokset",
-    "noResults": "Unelmoijia ei löytynyt"
+    "noResults": "Uneksijia ei löytynyt"
   }
 }
