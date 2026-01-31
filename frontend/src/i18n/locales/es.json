@@ -207,6 +207,21 @@
     "circleCreated": "¡Círculo creado!",
     "welcomeBack": "¡Bienvenido de nuevo!",
     "invalidCredentials": "Credenciales inválidas",
-    "analysisComplete": "¡Análisis completado!"
+    "analysisComplete": "¡Análisis completado!",
+    "messageSent": "¡Mensaje enviado!"
+  },
+  "messages": {
+    "title": "Mensajes",
+    "subtitle": "Conecta con soñadores",
+    "noConversations": "Sin conversaciones",
+    "startChat": "Iniciar conversación",
+    "searchPlaceholder": "Buscar soñadores...",
+    "typePlaceholder": "Escribe un mensaje...",
+    "send": "Enviar",
+    "back": "Volver",
+    "unread": "sin leer",
+    "noMessages": "Sin mensajes. ¡Di hola!",
+    "searchResults": "Resultados de búsqueda",
+    "noResults": "Ningún soñador encontrado"
   }
 }
