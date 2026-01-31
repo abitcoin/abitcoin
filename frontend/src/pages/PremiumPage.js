@@ -1,47 +1,50 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, LogOut, Sparkles, Check, Infinity } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
 
 const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
-const PACKAGES = [
-  {
-    id: "monthly",
-    name: "Premium Monthly",
-    price: 9.99,
-    period: "/month",
-    features: [
-      "Unlimited AI dream analysis",
-      "Advanced dream insights",
-      "Pattern recognition",
-      "Priority support",
-      "Export your dreams"
-    ],
-    popular: false
-  },
-  {
-    id: "lifetime",
-    name: "Premium Lifetime",
-    price: 29.99,
-    period: "one-time",
-    features: [
-      "Everything in Monthly",
-      "Lifetime access",
-      "No recurring payments",
-      "Future feature updates",
-      "Best value"
-    ],
-    popular: true
-  }
-];
-
 export default function PremiumPage({ user, onLogout }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(null);
+
+  const PACKAGES = [
+    {
+      id: "monthly",
+      name: t('premium.monthly'),
+      price: 9.99,
+      period: t('premium.perMonth'),
+      features: [
+        t('premium.features.unlimited'),
+        t('premium.features.artwork'),
+        t('premium.features.circles'),
+        t('premium.features.priority'),
+        t('premium.features.updates')
+      ],
+      popular: false
+    },
+    {
+      id: "lifetime",
+      name: t('premium.lifetime'),
+      price: 29.99,
+      period: t('premium.oneTime'),
+      features: [
+        t('premium.features.unlimited'),
+        t('premium.features.artwork'),
+        t('premium.features.circles'),
+        t('premium.features.priority'),
+        t('premium.features.bestValue')
+      ],
+      popular: true
+    }
+  ];
 
   const handleUpgrade = async (packageId) => {
     setLoading(packageId);
@@ -61,7 +64,7 @@ export default function PremiumPage({ user, onLogout }) {
         window.location.href = response.data.url;
       }
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to start checkout");
+      toast.error(error.response?.data?.detail || t('common.error'));
       setLoading(null);
     }
   };
@@ -84,7 +87,7 @@ export default function PremiumPage({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -92,7 +95,7 @@ export default function PremiumPage({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -100,18 +103,21 @@ export default function PremiumPage({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
               </div>
             </div>
-            <Button
-              variant="ghost"
-              onClick={onLogout}
-              className="text-void hover:text-void/80"
-              data-testid="logout-button"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
+              <Button
+                variant="ghost"
+                onClick={onLogout}
+                className="text-void hover:text-void/80"
+                data-testid="logout-button"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -122,19 +128,15 @@ export default function PremiumPage({ user, onLogout }) {
         <div className="text-center mb-16">
           <div className="inline-flex items-center gap-2 px-4 py-2 bg-ethereal/20 backdrop-blur-md rounded-full border border-ethereal/30 mb-6">
             <Sparkles className="w-5 h-5 text-void" />
-            <span className="text-sm font-body text-void font-medium">Unlock AI Dream Analysis</span>
+            <span className="text-sm font-body text-void font-medium">{t('premium.badge')}</span>
           </div>
           
           <h1 className="text-4xl sm:text-5xl lg:text-6xl font-heading font-light text-void tracking-tight mb-4">
-            Unlock the <span className="italic">mysteries</span>
-            <br />of your dreams
+            {t('premium.title')} <span className="italic">{t('premium.titleItalic')}</span>
           </h1>
           
           <p className="text-lg text-void/70 font-body tracking-wide max-w-2xl mx-auto mb-2">
-            Upgrade to Premium and get unlimited AI-powered dream analysis with deep psychological insights
-          </p>
-          <p className="text-sm text-void/60 font-body">
-            ✨ All users get 5 free AI analyses to try it out!
+            {t('premium.subtitle')}
           </p>
         </div>
 
@@ -151,7 +153,7 @@ export default function PremiumPage({ user, onLogout }) {
               {pkg.popular && (
                 <div className="absolute -top-4 left-1/2 transform -translate-x-1/2">
                   <div className="bg-lucid text-void px-4 py-1 rounded-full text-sm font-body font-medium">
-                    Most Popular
+                    {t('premium.popular')}
                   </div>
                 </div>
               )}
@@ -181,28 +183,10 @@ export default function PremiumPage({ user, onLogout }) {
                 className="w-full bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid={`upgrade-${pkg.id}-button`}
               >
-                {loading === pkg.id ? "Processing..." : "Upgrade Now"}
+                {loading === pkg.id ? t('common.loading') : t('premium.subscribe')}
               </Button>
             </div>
           ))}
-        </div>
-
-        {/* Features Section */}
-        <div className="mt-20">
-          <div className="glass-effect rounded-3xl p-12 text-center">
-            <Sparkles className="w-12 h-12 text-lucid mx-auto mb-4" />
-            <h2 className="text-3xl font-heading font-light text-void mb-4">
-              Why <span className="italic">Premium?</span>
-            </h2>
-            <p className="text-void/70 font-body max-w-2xl mx-auto leading-relaxed mb-6">
-              Our AI dream analyst uses advanced psychology and symbolism knowledge to provide deep, 
-              personalized insights into your dreams. Discover hidden meanings, emotional patterns, 
-              and unlock the wisdom of your subconscious mind.
-            </p>
-            <div className="flex items-center justify-center gap-2 text-sm text-void/60 font-body">
-              <span>💳 Payment options: Credit Card, Klarna</span>
-            </div>
-          </div>
         </div>
       </div>
     </div>
