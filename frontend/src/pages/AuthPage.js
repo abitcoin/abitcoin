@@ -4,6 +4,7 @@ import { Moon, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import { Checkbox } from "@/components/ui/checkbox";
 import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
@@ -16,6 +17,8 @@ export default function AuthPage({ onLogin }) {
   const [isLogin, setIsLogin] = useState(true);
   const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [agreedToTerms, setAgreedToTerms] = useState(false);
+  const [showTerms, setShowTerms] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
     password: "",
