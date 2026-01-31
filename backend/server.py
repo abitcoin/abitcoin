@@ -241,6 +241,11 @@ async def signup(user_data: UserSignup):
         "name": user_data.name,
         "is_premium": False,
         "ai_analysis_count": 0,
+        "daily_likes_count": 0,
+        "daily_comments_count": 0,
+        "last_activity_date": None,
+        "followers_count": 0,
+        "following_count": 0,
         "created_at": datetime.now(timezone.utc).isoformat()
     }
     
