@@ -1,8 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, LogOut, PlusCircle, Heart, MessageCircle, User } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -11,6 +13,7 @@ const API = `${BACKEND_URL}/api`;
 
 export default function CommunityFeed({ user, onLogout }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [feed, setFeed] = useState([]);
   const [loading, setLoading] = useState(true);
   const [commentingOn, setCommentingOn] = useState(null);

@@ -1,10 +1,12 @@
 import { useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, LogOut, Save, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
 import { Label } from "@/components/ui/label";
+import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -26,6 +28,7 @@ const TAG_OPTIONS = [
 
 export default function DreamJournal({ user, onLogout }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     title: "",
