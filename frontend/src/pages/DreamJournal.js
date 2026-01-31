@@ -62,10 +62,10 @@ export default function DreamJournal({ user, onLogout }) {
         headers: { Authorization: `Bearer ${token}` }
       });
 
-      toast.success("Dream saved successfully!");
+      toast.success(t('toast.dreamSaved'));
       navigate(`/dreams/${response.data.id}`);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to save dream");
+      toast.error(error.response?.data?.detail || t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -89,7 +89,7 @@ export default function DreamJournal({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -97,7 +97,7 @@ export default function DreamJournal({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -105,7 +105,7 @@ export default function DreamJournal({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -114,19 +114,22 @@ export default function DreamJournal({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
-            <Button
-              variant="ghost"
-              onClick={onLogout}
-              className="text-void hover:text-void/80"
-              data-testid="logout-button"
-            >
-              <LogOut className="w-4 h-4" />
-            </Button>
+            <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
+              <Button
+                variant="ghost"
+                onClick={onLogout}
+                className="text-void hover:text-void/80"
+                data-testid="logout-button"
+              >
+                <LogOut className="w-4 h-4" />
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -135,21 +138,21 @@ export default function DreamJournal({ user, onLogout }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2" data-testid="journal-title">
-            Record Your <span className="italic">Dream</span>
+            <span className="italic">{t('journal.title')}</span>
           </h1>
           <p className="text-lg text-void/70 font-body tracking-wide">
-            Capture the details while they're still fresh
+            {t('journal.subtitle')}
           </p>
         </div>
 
         <form onSubmit={handleSubmit} className="glass-effect rounded-3xl p-8" data-testid="dream-form">
           {/* Title */}
           <div className="mb-6">
-            <Label htmlFor="title" className="text-void font-body text-lg mb-2">Dream Title</Label>
+            <Label htmlFor="title" className="text-void font-body text-lg mb-2">{t('journal.dreamTitle')}</Label>
             <Input
               id="title"
               type="text"
-              placeholder="Give your dream a title..."
+              placeholder={t('journal.dreamTitlePlaceholder')}
               value={formData.title}
               onChange={(e) => setFormData({...formData, title: e.target.value})}
               className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl h-12"
@@ -160,7 +163,7 @@ export default function DreamJournal({ user, onLogout }) {
 
           {/* Date */}
           <div className="mb-6">
-            <Label htmlFor="date" className="text-void font-body text-lg mb-2">Date</Label>
+            <Label htmlFor="date" className="text-void font-body text-lg mb-2">{t('journal.date')}</Label>
             <Input
               id="date"
               type="date"
@@ -174,10 +177,10 @@ export default function DreamJournal({ user, onLogout }) {
 
           {/* Content */}
           <div className="mb-6">
-            <Label htmlFor="content" className="text-void font-body text-lg mb-2">Dream Description</Label>
+            <Label htmlFor="content" className="text-void font-body text-lg mb-2">{t('journal.dreamContent')}</Label>
             <Textarea
               id="content"
-              placeholder="Describe your dream in detail..."
+              placeholder={t('journal.dreamContentPlaceholder')}
               value={formData.content}
               onChange={(e) => setFormData({...formData, content: e.target.value})}
               className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl min-h-[300px] resize-none"
@@ -188,7 +191,7 @@ export default function DreamJournal({ user, onLogout }) {
 
           {/* Tags */}
           <div className="mb-8">
-            <Label className="text-void font-body text-lg mb-3 block">Tags</Label>
+            <Label className="text-void font-body text-lg mb-3 block">{t('journal.tags')}</Label>
             <div className="flex flex-wrap gap-2">
               {TAG_OPTIONS.map((tag) => (
                 <button
@@ -214,7 +217,7 @@ export default function DreamJournal({ user, onLogout }) {
 
           {/* Public/Private Toggle */}
           <div className="mb-8">
-            <Label className="text-void font-body text-lg mb-3 block">Sharing</Label>
+            <Label className="text-void font-body text-lg mb-3 block">{t('journal.makePublic')}</Label>
             <div className="flex items-center gap-4">
               <button
                 type="button"
@@ -226,7 +229,7 @@ export default function DreamJournal({ user, onLogout }) {
                 }`}
                 data-testid="private-button"
               >
-                🔒 Private (only you)
+                🔒 Private
               </button>
               <button
                 type="button"
@@ -238,13 +241,11 @@ export default function DreamJournal({ user, onLogout }) {
                 }`}
                 data-testid="public-button"
               >
-                🌍 Public (share with community)
+                🌍 Public
               </button>
             </div>
             <p className="text-sm text-void/60 font-body mt-2">
-              {formData.is_public 
-                ? "Your dream will be visible in the community feed" 
-                : "Only you can see this dream"}
+              {t('journal.publicDescription')}
             </p>
           </div>
 
@@ -257,7 +258,7 @@ export default function DreamJournal({ user, onLogout }) {
               data-testid="save-dream-button"
             >
               <Save className="w-4 h-4 mr-2" />
-              {loading ? "Saving..." : "Save Dream"}
+              {loading ? t('journal.saving') : t('journal.saveDream')}
             </Button>
             <Button
               type="button"
@@ -267,7 +268,7 @@ export default function DreamJournal({ user, onLogout }) {
               data-testid="cancel-button"
             >
               <X className="w-4 h-4 mr-2" />
-              Cancel
+              {t('common.cancel')}
             </Button>
           </div>
         </form>
