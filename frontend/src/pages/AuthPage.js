@@ -27,6 +27,13 @@ export default function AuthPage({ onLogin }) {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
+    
+    // Check terms agreement for signup
+    if (!isLogin && !agreedToTerms) {
+      toast.error(t('auth.mustAgree'));
+      return;
+    }
+    
     setLoading(true);
 
     try {
