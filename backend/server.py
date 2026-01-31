@@ -77,6 +77,7 @@ class DreamUpdate(BaseModel):
     content: Optional[str] = None
     date: Optional[datetime] = None
     tags: Optional[List[str]] = None
+    is_public: Optional[bool] = None
     human_analysis: Optional[str] = None
 
 class Dream(BaseModel):
