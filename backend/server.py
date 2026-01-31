@@ -174,6 +174,43 @@ def create_token(user_id: str) -> str:
     }
     return jwt.encode(payload, JWT_SECRET, algorithm=JWT_ALGORITHM)
 
+async def check_daily_limit(user_id: str, limit_type: str, max_limit: int) -> bool:
+    """Check if user has exceeded daily limit for likes or comments"""
+    user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user_doc:
+        return False
+    
+    # Premium users have no limits
+    if user_doc.get("is_premium", False):
+        return True
+    
+    # Check if it's a new day (reset counters)
+    today = datetime.now(timezone.utc).date().isoformat()
+    last_date = user_doc.get("last_activity_date")
+    
+    if last_date != today:
+        # Reset daily counters
+        await db.users.update_one(
+            {"id": user_id},
+            {"$set": {
+                "daily_likes_count": 0,
+                "daily_comments_count": 0,
+                "last_activity_date": today
+            }}
+        )
+        return True
+    
+    # Check limit
+    current_count = user_doc.get(f"daily_{limit_type}_count", 0)
+    return current_count < max_limit
+
+async def increment_daily_counter(user_id: str, limit_type: str):
+    """Increment daily counter for likes or comments"""
+    await db.users.update_one(
+        {"id": user_id},
+        {"$inc": {f"daily_{limit_type}_count": 1}}
+    )
+
 async def get_current_user(credentials: HTTPAuthorizationCredentials = Depends(security)) -> str:
     try:
         token = credentials.credentials
