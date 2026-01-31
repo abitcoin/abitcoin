@@ -15,7 +15,20 @@
     "heroTitle2": "",
     "heroDescription": "Tallenna, analysoi ja ymmärrä uniasi tekoälyn avulla. Löydä kuvioita, avaa merkityksiä ja lähde matkalle alitajuntasi läpi.",
     "startDreaming": "Aloita uneksiminen",
-    "getStarted": "Aloita"
+    "getStarted": "Aloita",
+    "featuresTitle": "Unesi,",
+    "featuresItalic": "valaistuna",
+    "featuresSubtitle": "Tehokkaita ominaisuuksia sisäisen maailmasi ymmärtämiseen",
+    "featureJournalTitle": "Unipäiväkirja",
+    "featureJournalDesc": "Tallenna unesi yksityiskohtaisesti, tageilla ja päivämäärillä. Rakenna kattava arkisto öisistä matkoistasi.",
+    "featureAnalysisTitle": "Tekoälyanalyysi",
+    "featureAnalysisDesc": "Saa oivaltavia tulkintoja edistyneellä tekoälyllä. Tutki symboleja, teemoja ja piilotettuja merkityksiä unissasi.",
+    "featurePatternsTitle": "Seuraa kuvioita",
+    "featurePatternsDesc": "Löydä toistuvia teemoja ja trendejä. Ymmärrä mitä alitajuntasi yrittää kertoa sinulle ajan myötä.",
+    "ctaTitle": "Valmis sukeltamaan",
+    "ctaItalic": "uniisi?",
+    "ctaSubtitle": "Liity DreamWiseen tänään ja aloita itsesi löytämisen matka",
+    "ctaButton": "Aloita matkasi"
   },
   "footer": {
     "copyright": "© 2025 DreamWise. Kaikki unet pidätetään.",
