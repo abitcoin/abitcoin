@@ -207,6 +207,21 @@
     "circleCreated": "Kreis erstellt!",
     "welcomeBack": "Willkommen zurück!",
     "invalidCredentials": "Ungültige Anmeldedaten",
-    "analysisComplete": "Analyse abgeschlossen!"
+    "analysisComplete": "Analyse abgeschlossen!",
+    "messageSent": "Nachricht gesendet!"
+  },
+  "messages": {
+    "title": "Nachrichten",
+    "subtitle": "Verbinde dich mit Träumern",
+    "noConversations": "Keine Unterhaltungen",
+    "startChat": "Unterhaltung starten",
+    "searchPlaceholder": "Träumer suchen...",
+    "typePlaceholder": "Nachricht schreiben...",
+    "send": "Senden",
+    "back": "Zurück",
+    "unread": "ungelesen",
+    "noMessages": "Keine Nachrichten. Sag Hallo!",
+    "searchResults": "Suchergebnisse",
+    "noResults": "Keine Träumer gefunden"
   }
 }
