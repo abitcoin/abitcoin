@@ -133,19 +133,11 @@ export default function CommunityFeed({ user, onLogout }) {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/community')}
+                  onClick={() => navigate('/community-hub')}
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
-                  data-testid="nav-community"
+                  data-testid="nav-community-hub"
                 >
-                  Feed
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate('/circles')}
-                  className="font-body text-void hover:text-void/80"
-                  data-testid="nav-circles"
-                >
-                  Circles
+                  Community
                 </Button>
                 {!user?.is_premium && (
                   <Button
