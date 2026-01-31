@@ -991,6 +991,128 @@ async def join_circle(circle_id: str, user_id: str = Depends(get_current_user)):
         )
         return {"message": "Joined circle", "joined": True}
 
+# Circle Collaborative Interpretation Routes
+@api_router.post("/circles/{circle_id}/dreams")
+async def share_dream_to_circle(circle_id: str, request: ShareDreamToCircleRequest, user_id: str = Depends(get_current_user)):
+    """Share a dream to a circle for collaborative interpretation"""
+    # Check if circle exists and user is a member
+    circle = await db.circles.find_one({"id": circle_id}, {"_id": 0})
+    if not circle:
+        raise HTTPException(status_code=404, detail="Circle not found")
+    
+    if user_id not in circle.get("member_ids", []):
+        raise HTTPException(status_code=403, detail="You must be a member of this circle to share dreams")
+    
+    # Get the dream
+    dream = await db.dreams.find_one({"id": request.dream_id, "owner_id": user_id}, {"_id": 0})
+    if not dream:
+        raise HTTPException(status_code=404, detail="Dream not found")
+    
+    # Check if already shared
+    existing = await db.circle_dreams.find_one({"circle_id": circle_id, "dream_id": request.dream_id})
+    if existing:
+        raise HTTPException(status_code=400, detail="Dream already shared to this circle")
+    
+    # Get user info
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
+    
+    # Create circle dream entry
+    now = datetime.now(timezone.utc)
+    circle_dream_doc = {
+        "id": str(uuid.uuid4()),
+        "circle_id": circle_id,
+        "dream_id": request.dream_id,
+        "dream_title": dream["title"],
+        "dream_content": dream["content"],
+        "dream_tags": dream.get("tags", []),
+        "user_id": user_id,
+        "user_name": user["name"],
+        "interpretations": [],
+        "created_at": now
+    }
+    
+    await db.circle_dreams.insert_one(circle_dream_doc)
+    
+    return {
+        "id": circle_dream_doc["id"],
+        "circle_id": circle_dream_doc["circle_id"],
+        "dream_id": circle_dream_doc["dream_id"],
+        "dream_title": circle_dream_doc["dream_title"],
+        "user_name": circle_dream_doc["user_name"],
+        "created_at": circle_dream_doc["created_at"].isoformat()
+    }
+
+@api_router.get("/circles/{circle_id}/dreams")
+async def get_circle_dreams(circle_id: str, user_id: str = Depends(get_current_user)):
+    """Get all dreams shared to a circle"""
+    # Check if circle exists and user is a member
+    circle = await db.circles.find_one({"id": circle_id}, {"_id": 0})
+    if not circle:
+        raise HTTPException(status_code=404, detail="Circle not found")
+    
+    if user_id not in circle.get("member_ids", []):
+        raise HTTPException(status_code=403, detail="You must be a member of this circle to view dreams")
+    
+    dreams = await db.circle_dreams.find(
+        {"circle_id": circle_id},
+        {"_id": 0}
+    ).sort("created_at", -1).to_list(50)
+    
+    # Convert datetime to ISO string
+    for dream in dreams:
+        if isinstance(dream.get("created_at"), datetime):
+            dream["created_at"] = dream["created_at"].isoformat()
+        for interp in dream.get("interpretations", []):
+            if isinstance(interp.get("created_at"), datetime):
+                interp["created_at"] = interp["created_at"].isoformat()
+    
+    return dreams
+
+@api_router.post("/circles/{circle_id}/dreams/{dream_id}/interpretations")
+async def add_interpretation(circle_id: str, dream_id: str, request: AddInterpretationRequest, user_id: str = Depends(get_current_user)):
+    """Add a collaborative interpretation to a shared dream"""
+    # Check if circle exists and user is a member
+    circle = await db.circles.find_one({"id": circle_id}, {"_id": 0})
+    if not circle:
+        raise HTTPException(status_code=404, detail="Circle not found")
+    
+    if user_id not in circle.get("member_ids", []):
+        raise HTTPException(status_code=403, detail="You must be a member of this circle to add interpretations")
+    
+    # Check if circle dream exists
+    circle_dream = await db.circle_dreams.find_one({"circle_id": circle_id, "dream_id": dream_id}, {"_id": 0})
+    if not circle_dream:
+        raise HTTPException(status_code=404, detail="Dream not found in this circle")
+    
+    # Get user info
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1, "is_premium": 1})
+    
+    # Create interpretation
+    now = datetime.now(timezone.utc)
+    interpretation = {
+        "id": str(uuid.uuid4()),
+        "user_id": user_id,
+        "user_name": user["name"],
+        "is_premium": user.get("is_premium", False),
+        "interpretation": request.interpretation,
+        "created_at": now
+    }
+    
+    # Add interpretation to circle dream
+    await db.circle_dreams.update_one(
+        {"circle_id": circle_id, "dream_id": dream_id},
+        {"$push": {"interpretations": interpretation}}
+    )
+    
+    return {
+        "id": interpretation["id"],
+        "user_id": interpretation["user_id"],
+        "user_name": interpretation["user_name"],
+        "is_premium": interpretation["is_premium"],
+        "interpretation": interpretation["interpretation"],
+        "created_at": interpretation["created_at"].isoformat()
+    }
+
 # Direct Messaging Routes
 @api_router.get("/messages/conversations")
 async def get_conversations(user_id: str = Depends(get_current_user)):
