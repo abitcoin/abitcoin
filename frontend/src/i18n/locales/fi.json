@@ -35,7 +35,26 @@
     "resetPassword": "Nollaa salasana",
     "resetEmailSent": "Jos tili löytyy tällä sähköpostilla, saat salasanan nollauslinkin.",
     "backToLogin": "Takaisin kirjautumiseen",
-    "enterEmail": "Syötä sähköpostiosoitteesi"
+    "enterEmail": "Syötä sähköpostiosoitteesi",
+    "agreeToTerms": "Hyväksyn",
+    "termsOfService": "Käyttöehdot",
+    "and": "ja",
+    "privacyPolicy": "Tietosuojakäytännön",
+    "mustAgree": "Sinun täytyy hyväksyä ehdot jatkaaksesi"
+  },
+  "terms": {
+    "title": "Käyttöehdot",
+    "lastUpdated": "Päivitetty viimeksi",
+    "intro": "Käyttämällä DreamWisea hyväksyt nämä ehdot.",
+    "prohibited": "Kielletty sisältö",
+    "prohibitedText": "Käyttäjät eivät saa julkaista sisältöä, joka sisältää: laitonta materiaalia, seksuaalisesti eksplisiittistä sisältöä, alaikäisiä koskevaa sisältöä, huumeita tai laittomia aineita edistävää sisältöä, vihapuhetta, häirintää tai mitään lakia rikkovaa sisältöä.",
+    "ageRequirement": "Ikävaatimus",
+    "ageText": "Sinun täytyy olla vähintään 13-vuotias käyttääksesi DreamWisea. Alle 18-vuotiailla tulee olla vanhempien suostumus.",
+    "privacy": "Yksityisyys",
+    "privacyText": "Unesi ja henkilötietosi ovat oletuksena yksityisiä. Sinä päätät, mitä jaat julkisesti.",
+    "termination": "Pidätämme oikeuden sulkea tilit, jotka rikkovat näitä ehtoja.",
+    "contact": "Yhteystiedot",
+    "contactText": "Kysymyksiä varten ota yhteyttä"
   },
   "dashboard": {
     "welcomeBack": "Tervetuloa takaisin,",
