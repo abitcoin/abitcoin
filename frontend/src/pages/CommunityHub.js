@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, LogOut, PlusCircle, Heart, MessageCircle, Users, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LanguageSelector from "@/components/LanguageSelector";
 
 export default function CommunityHub({ user, onLogout }) {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen">
@@ -23,7 +26,7 @@ export default function CommunityHub({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -31,7 +34,7 @@ export default function CommunityHub({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -39,7 +42,7 @@ export default function CommunityHub({ user, onLogout }) {
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -48,19 +51,20 @@ export default function CommunityHub({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
               <Button
                 onClick={() => navigate('/journal')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="new-dream-button"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                New Dream
+                {t('nav.newDream')}
               </Button>
               <Button
                 variant="ghost"
@@ -80,10 +84,10 @@ export default function CommunityHub({ user, onLogout }) {
         {/* Header */}
         <div className="text-center mb-16">
           <h1 className="text-5xl sm:text-6xl font-heading font-light text-void tracking-tight mb-4">
-            <span className="italic">Connect</span> with Dreamers
+            <span className="italic">{t('communityHub.title')}</span> {t('communityHub.titleSuffix')}
           </h1>
           <p className="text-xl text-void/70 font-body tracking-wide max-w-2xl mx-auto">
-            Share your dreams, join communities, and explore the collective unconscious
+            {t('communityHub.subtitle')}
           </p>
         </div>
 
@@ -98,24 +102,24 @@ export default function CommunityHub({ user, onLogout }) {
             <div className="w-16 h-16 bg-ethereal/20 rounded-2xl flex items-center justify-center mb-6">
               <TrendingUp className="w-8 h-8 text-void" />
             </div>
-            <h2 className="text-3xl font-heading font-light text-void mb-3">Dream Feed</h2>
+            <h2 className="text-3xl font-heading font-light text-void mb-3">{t('communityHub.feedTitle')}</h2>
             <p className="text-void/70 font-body leading-relaxed mb-6">
-              Explore public dreams from dreamers around the world. Like, comment, and connect with others.
+              {t('communityHub.feedDescription')}
             </p>
             <div className="flex items-center gap-4 text-sm text-void/60 font-body">
               <div className="flex items-center gap-2">
                 <Heart className="w-4 h-4" />
-                <span>Like Dreams</span>
+                <span>{t('communityHub.likeDreams')}</span>
               </div>
               <div className="flex items-center gap-2">
                 <MessageCircle className="w-4 h-4" />
-                <span>Comment</span>
+                <span>{t('communityHub.comment')}</span>
               </div>
             </div>
             <Button
               className="w-full mt-6 bg-ethereal text-void hover:bg-ethereal/90 rounded-full h-12 font-body font-medium transition-all duration-300"
             >
-              Explore Feed →
+              {t('communityHub.exploreFeed')} →
             </Button>
           </div>
 
@@ -128,26 +132,26 @@ export default function CommunityHub({ user, onLogout }) {
             <div className="w-16 h-16 bg-lucid/20 rounded-2xl flex items-center justify-center mb-6">
               <Users className="w-8 h-8 text-void" />
             </div>
-            <h2 className="text-3xl font-heading font-light text-void mb-3">Dream Circles</h2>
+            <h2 className="text-3xl font-heading font-light text-void mb-3">{t('communityHub.circlesTitle')}</h2>
             <p className="text-void/70 font-body leading-relaxed mb-6">
-              Join communities of dreamers with shared interests. Create your own circle and build connections.
+              {t('communityHub.circlesDescription')}
             </p>
             <div className="flex items-center gap-4 text-sm text-void/60 font-body">
               <div className="flex items-center gap-2">
                 <Users className="w-4 h-4" />
-                <span>Join Groups</span>
+                <span>{t('communityHub.joinGroups')}</span>
               </div>
               {user?.is_premium && (
                 <div className="flex items-center gap-2">
                   <PlusCircle className="w-4 h-4" />
-                  <span>Create Circles</span>
+                  <span>{t('communityHub.createCircles')}</span>
                 </div>
               )}
             </div>
             <Button
               className="w-full mt-6 bg-lucid text-void hover:bg-lucid/90 rounded-full h-12 font-body font-medium transition-all duration-300"
             >
-              Browse Circles →
+              {t('communityHub.browseCircles')} →
             </Button>
           </div>
         </div>
@@ -155,7 +159,7 @@ export default function CommunityHub({ user, onLogout }) {
         {/* Stats Section */}
         <div className="glass-effect rounded-3xl p-8 max-w-4xl mx-auto">
           <h3 className="text-2xl font-heading font-light text-void mb-6 text-center">
-            Community <span className="italic">Benefits</span>
+            {t('communityHub.benefits')}
           </h3>
           <div className="grid md:grid-cols-3 gap-6">
             <div className="text-center">
@@ -163,7 +167,7 @@ export default function CommunityHub({ user, onLogout }) {
                 {user?.is_premium ? '∞' : '10'}
               </div>
               <div className="text-sm text-void/70 font-body">
-                {user?.is_premium ? 'Unlimited Likes' : 'Likes per day'}
+                {user?.is_premium ? t('communityHub.unlimitedLikes') : t('communityHub.likesPerDay')}
               </div>
             </div>
             <div className="text-center">
@@ -171,7 +175,7 @@ export default function CommunityHub({ user, onLogout }) {
                 {user?.is_premium ? '∞' : '3'}
               </div>
               <div className="text-sm text-void/70 font-body">
-                {user?.is_premium ? 'Unlimited Comments' : 'Comments per day'}
+                {user?.is_premium ? t('communityHub.unlimitedComments') : t('communityHub.commentsPerDay')}
               </div>
             </div>
             <div className="text-center">
@@ -179,7 +183,7 @@ export default function CommunityHub({ user, onLogout }) {
                 {user?.is_premium ? '∞' : '3'}
               </div>
               <div className="text-sm text-void/70 font-body">
-                {user?.is_premium ? 'Unlimited Circles' : 'Circles to join'}
+                {user?.is_premium ? t('communityHub.unlimitedCircles') : t('communityHub.circlesToJoin')}
               </div>
             </div>
           </div>
@@ -187,13 +191,13 @@ export default function CommunityHub({ user, onLogout }) {
           {!user?.is_premium && (
             <div className="text-center mt-6 pt-6 border-t border-white/30">
               <p className="text-void/70 font-body mb-4">
-                Want unlimited community access?
+                {t('communityHub.wantUnlimited')}
               </p>
               <Button
                 onClick={() => navigate('/premium')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium"
               >
-                ✨ Upgrade to Premium
+                ✨ {t('dashboard.upgradePremium')}
               </Button>
             </div>
           )}
