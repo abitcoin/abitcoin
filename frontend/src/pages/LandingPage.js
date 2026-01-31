@@ -1,9 +1,12 @@
 import { useNavigate } from "react-router-dom";
+import { useTranslation } from "react-i18next";
 import { Moon, Sparkles, BookOpen, Brain, TrendingUp } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import LanguageSelector from "@/components/LanguageSelector";
 
 export default function LandingPage() {
   const navigate = useNavigate();
+  const { t } = useTranslation();
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-100 via-white to-green-100">
@@ -15,13 +18,16 @@ export default function LandingPage() {
               <Moon className="w-8 h-8 text-void" />
               <span className="text-2xl font-heading font-light text-void tracking-tight">DreamWise</span>
             </div>
-            <Button
-              onClick={() => navigate('/auth')}
-              className="bg-void text-white hover:bg-void/90 rounded-full px-8 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
-              data-testid="get-started-nav-button"
-            >
-              Get Started
-            </Button>
+            <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
+              <Button
+                onClick={() => navigate('/auth')}
+                className="bg-void text-white hover:bg-void/90 rounded-full px-8 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
+                data-testid="get-started-nav-button"
+              >
+                {t('landing.getStarted')}
+              </Button>
+            </div>
           </div>
         </div>
       </nav>
@@ -33,18 +39,17 @@ export default function LandingPage() {
           <div className="space-y-6">
             <div className="inline-flex items-center gap-2 px-4 py-2 bg-white/40 backdrop-blur-md rounded-full border border-white/60">
               <Sparkles className="w-4 h-4 text-lucid" />
-              <span className="text-sm font-body text-void">Your personal dream sanctuary</span>
+              <span className="text-sm font-body text-void">{t('landing.tagline')}</span>
             </div>
             
             <h1 className="text-5xl sm:text-6xl lg:text-7xl font-heading font-light text-void tracking-tight leading-tight">
-              Explore the
-              <span className="block italic text-ethereal">infinite realm</span>
-              of your dreams
+              {t('landing.heroTitle')}
+              <span className="block italic text-ethereal">{t('landing.heroTitleItalic')}</span>
+              {t('landing.heroTitle2')}
             </h1>
             
             <p className="text-lg text-void/70 font-body tracking-wide leading-relaxed">
-              Record, analyze, and understand your dreams with the help of AI. 
-              Discover patterns, unlock meanings, and embark on a journey through your subconscious.
+              {t('landing.heroDescription')}
             </p>
             
             <div className="flex gap-4 pt-4">
@@ -53,14 +58,14 @@ export default function LandingPage() {
                 className="bg-void text-white hover:bg-void/90 rounded-full px-8 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="get-started-hero-button"
               >
-                Start Dreaming
+                {t('landing.startDreaming')}
               </Button>
               <Button
                 variant="outline"
                 className="bg-white/50 text-void border-void/10 hover:bg-white/80 rounded-full px-8 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="learn-more-button"
               >
-                Learn More
+                {t('landing.learnMore')}
               </Button>
             </div>
           </div>
