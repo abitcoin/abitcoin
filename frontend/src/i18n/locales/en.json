@@ -15,7 +15,20 @@
     "heroTitle2": "of your dreams",
     "heroDescription": "Record, analyze, and understand your dreams with the help of AI. Discover patterns, unlock meanings, and embark on a journey through your subconscious.",
     "startDreaming": "Start Dreaming",
-    "getStarted": "Get Started"
+    "getStarted": "Get Started",
+    "featuresTitle": "Your dreams,",
+    "featuresItalic": "illuminated",
+    "featuresSubtitle": "Powerful features to help you understand your inner world",
+    "featureJournalTitle": "Dream Journal",
+    "featureJournalDesc": "Capture your dreams with rich details, tags, and dates. Build a comprehensive archive of your nocturnal journeys.",
+    "featureAnalysisTitle": "AI Analysis",
+    "featureAnalysisDesc": "Get insightful interpretations powered by advanced AI. Explore symbols, themes, and hidden meanings in your dreams.",
+    "featurePatternsTitle": "Track Patterns",
+    "featurePatternsDesc": "Discover recurring themes and trends. Understand what your subconscious is trying to tell you over time.",
+    "ctaTitle": "Ready to dive into",
+    "ctaItalic": "your dreams?",
+    "ctaSubtitle": "Join DreamWise today and start your journey of self-discovery",
+    "ctaButton": "Begin Your Journey"
   },
   "footer": {
     "copyright": "© 2025 DreamWise. All dreams reserved.",
