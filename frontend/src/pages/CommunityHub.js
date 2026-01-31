@@ -35,9 +35,9 @@ export default function CommunityHub({ user, onLogout }) {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/community')}
+                  onClick={() => navigate('/community-hub')}
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
-                  data-testid="nav-community"
+                  data-testid="nav-community-hub"
                 >
                   Community
                 </Button>
@@ -91,7 +91,7 @@ export default function CommunityHub({ user, onLogout }) {
         <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-12">
           {/* Dream Feed */}
           <div
-            onClick={() => navigate('/community/feed')}
+            onClick={() => navigate('/community')}
             className="glass-effect rounded-3xl p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer dream-card-hover"
             data-testid="community-feed-card"
           >
@@ -121,7 +121,7 @@ export default function CommunityHub({ user, onLogout }) {
 
           {/* Dream Circles */}
           <div
-            onClick={() => navigate('/community/circles')}
+            onClick={() => navigate('/circles')}
             className="glass-effect rounded-3xl p-10 hover:shadow-2xl transition-all duration-500 hover:-translate-y-2 cursor-pointer dream-card-hover"
             data-testid="community-circles-card"
           >
