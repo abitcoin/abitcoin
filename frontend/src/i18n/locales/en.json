@@ -35,7 +35,26 @@
     "resetPassword": "Reset Password",
     "resetEmailSent": "If an account exists with this email, you will receive a password reset link.",
     "backToLogin": "Back to login",
-    "enterEmail": "Enter your email address"
+    "enterEmail": "Enter your email address",
+    "agreeToTerms": "I agree to the",
+    "termsOfService": "Terms of Service",
+    "and": "and",
+    "privacyPolicy": "Privacy Policy",
+    "mustAgree": "You must agree to the terms to continue"
+  },
+  "terms": {
+    "title": "Terms of Service",
+    "lastUpdated": "Last updated",
+    "intro": "By using DreamWise, you agree to these terms.",
+    "prohibited": "Prohibited Content",
+    "prohibitedText": "Users must not post content that includes: illegal material, sexually explicit content, content involving minors, content promoting drugs or illegal substances, hate speech, harassment, or any content that violates applicable laws.",
+    "ageRequirement": "Age Requirement",
+    "ageText": "You must be at least 13 years old to use DreamWise. Users under 18 should have parental consent.",
+    "privacy": "Privacy",
+    "privacyText": "Your dreams and personal data are private by default. You control what you share publicly.",
+    "termination": "We reserve the right to terminate accounts that violate these terms.",
+    "contact": "Contact",
+    "contactText": "For questions, contact us at"
   },
   "dashboard": {
     "welcomeBack": "Welcome back,",
