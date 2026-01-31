@@ -137,7 +137,7 @@ export default function Dashboard({ user, onLogout }) {
 
         {loading ? (
           <div className="text-center py-12" data-testid="loading-stats">
-            <p className="text-void/60 font-body">Loading your dream statistics...</p>
+            <p className="text-void/60 font-body">{t('common.loading')}</p>
           </div>
         ) : (
           <>
@@ -150,7 +150,7 @@ export default function Dashboard({ user, onLogout }) {
                   </div>
                   <span className="text-3xl font-heading font-light text-void">{stats?.total_dreams || 0}</span>
                 </div>
-                <h3 className="text-lg font-body text-void/80">Total Dreams</h3>
+                <h3 className="text-lg font-body text-void/80">{t('dashboard.totalDreams')}</h3>
               </div>
 
               <div className="glass-effect rounded-3xl p-8 hover:shadow-lg transition-all duration-500 hover:-translate-y-1" data-testid="stat-week-dreams">
@@ -160,7 +160,7 @@ export default function Dashboard({ user, onLogout }) {
                   </div>
                   <span className="text-3xl font-heading font-light text-void">{stats?.dreams_this_week || 0}</span>
                 </div>
-                <h3 className="text-lg font-body text-void/80">This Week</h3>
+                <h3 className="text-lg font-body text-void/80">{t('dashboard.thisWeek')}</h3>
               </div>
 
               <div className="glass-effect rounded-3xl p-8 hover:shadow-lg transition-all duration-500 hover:-translate-y-1" data-testid="stat-month-dreams">
@@ -170,7 +170,7 @@ export default function Dashboard({ user, onLogout }) {
                   </div>
                   <span className="text-3xl font-heading font-light text-void">{stats?.dreams_this_month || 0}</span>
                 </div>
-                <h3 className="text-lg font-body text-void/80">This Month</h3>
+                <h3 className="text-lg font-body text-void/80">{t('dashboard.thisMonth')}</h3>
               </div>
             </div>
 
@@ -178,7 +178,7 @@ export default function Dashboard({ user, onLogout }) {
             <div className="grid lg:grid-cols-2 gap-8">
               {/* Recent Dreams */}
               <div className="glass-effect rounded-3xl p-8">
-                <h2 className="text-2xl font-heading font-light text-void mb-6" data-testid="recent-dreams-title">Recent Dreams</h2>
+                <h2 className="text-2xl font-heading font-light text-void mb-6" data-testid="recent-dreams-title">{t('dashboard.recentDreams')}</h2>
                 {stats?.recent_dreams && stats.recent_dreams.length > 0 ? (
                   <div className="space-y-4">
                     {stats.recent_dreams.map((dream) => (
@@ -202,13 +202,13 @@ export default function Dashboard({ user, onLogout }) {
                   </div>
                 ) : (
                   <div className="text-center py-8" data-testid="no-dreams-message">
-                    <p className="text-void/60 font-body mb-4">No dreams yet</p>
+                    <p className="text-void/60 font-body mb-4">{t('dashboard.noDreams')}</p>
                     <Button
                       onClick={() => navigate('/journal')}
                       className="bg-void text-white hover:bg-void/90 rounded-full font-body"
                       data-testid="start-recording-button"
                     >
-                      Start Recording
+                      {t('dashboard.startRecording')}
                     </Button>
                   </div>
                 )}
@@ -216,7 +216,7 @@ export default function Dashboard({ user, onLogout }) {
 
               {/* Most Common Tags */}
               <div className="glass-effect rounded-3xl p-8">
-                <h2 className="text-2xl font-heading font-light text-void mb-6" data-testid="common-tags-title">Most Common Tags</h2>
+                <h2 className="text-2xl font-heading font-light text-void mb-6" data-testid="common-tags-title">{t('dashboard.commonTags')}</h2>
                 {stats?.most_common_tags && stats.most_common_tags.length > 0 ? (
                   <div className="space-y-3">
                     {stats.most_common_tags.map((item, idx) => (
