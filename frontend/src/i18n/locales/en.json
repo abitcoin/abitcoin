@@ -207,6 +207,21 @@
     "circleCreated": "Circle created!",
     "welcomeBack": "Welcome back!",
     "invalidCredentials": "Invalid credentials",
-    "analysisComplete": "Analysis complete!"
+    "analysisComplete": "Analysis complete!",
+    "messageSent": "Message sent!"
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Connect with dreamers",
+    "noConversations": "No conversations yet",
+    "startChat": "Start a conversation",
+    "searchPlaceholder": "Search dreamers...",
+    "typePlaceholder": "Type a message...",
+    "send": "Send",
+    "back": "Back",
+    "unread": "unread",
+    "noMessages": "No messages yet. Say hello!",
+    "searchResults": "Search results",
+    "noResults": "No dreamers found"
   }
 }
