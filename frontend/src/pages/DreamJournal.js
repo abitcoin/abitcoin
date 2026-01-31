@@ -201,6 +201,42 @@ export default function DreamJournal({ user, onLogout }) {
             </div>
           </div>
 
+          {/* Public/Private Toggle */}
+          <div className="mb-8">
+            <Label className="text-void font-body text-lg mb-3 block">Sharing</Label>
+            <div className="flex items-center gap-4">
+              <button
+                type="button"
+                onClick={() => setFormData({...formData, is_public: false})}
+                className={`px-6 py-3 rounded-full font-body transition-all duration-300 ${
+                  !formData.is_public
+                    ? 'bg-void text-white'
+                    : 'bg-white/30 text-void/70 hover:bg-white/50'
+                }`}
+                data-testid="private-button"
+              >
+                🔒 Private (only you)
+              </button>
+              <button
+                type="button"
+                onClick={() => setFormData({...formData, is_public: true})}
+                className={`px-6 py-3 rounded-full font-body transition-all duration-300 ${
+                  formData.is_public
+                    ? 'bg-lucid text-void'
+                    : 'bg-white/30 text-void/70 hover:bg-white/50'
+                }`}
+                data-testid="public-button"
+              >
+                🌍 Public (share with community)
+              </button>
+            </div>
+            <p className="text-sm text-void/60 font-body mt-2">
+              {formData.is_public 
+                ? "Your dream will be visible in the community feed" 
+                : "Only you can see this dream"}
+            </p>
+          </div>
+
           {/* Actions */}
           <div className="flex gap-4">
             <Button
