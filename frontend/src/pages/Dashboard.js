@@ -235,7 +235,7 @@ export default function Dashboard({ user, onLogout }) {
                     ))}
                   </div>
                 ) : (
-                  <p className="text-void/60 font-body text-center py-8" data-testid="no-tags-message">No tags yet</p>
+                  <p className="text-void/60 font-body text-center py-8" data-testid="no-tags-message">{t('dashboard.noTags')}</p>
                 )}
               </div>
             </div>
