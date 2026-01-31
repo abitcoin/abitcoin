@@ -27,7 +27,7 @@ export default function LanguageSelector({ variant = 'default' }) {
 
   if (variant === 'minimal') {
     return (
-      <div className="relative" ref={dropdownRef}>
+      <div className="relative z-[100]" ref={dropdownRef}>
         <button
           onClick={() => setIsOpen(!isOpen)}
           className="flex items-center gap-1 text-sm text-void/70 hover:text-void transition-colors px-2 py-1 rounded-lg hover:bg-white/50"
@@ -38,7 +38,7 @@ export default function LanguageSelector({ variant = 'default' }) {
         </button>
         
         {isOpen && (
-          <div className="absolute right-0 mt-2 w-40 glass-effect rounded-xl shadow-lg py-2 z-50">
+          <div className="absolute right-0 mt-2 w-40 glass-effect rounded-xl shadow-lg py-2 z-[100]">
             {languages.map((lang) => (
               <button
                 key={lang.code}
