@@ -14,6 +14,7 @@ const API = `${BACKEND_URL}/api`;
 export default function AuthPage({ onLogin }) {
   const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
+  const [isForgotPassword, setIsForgotPassword] = useState(false);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
     email: "",
@@ -36,6 +37,23 @@ export default function AuthPage({ onLogin }) {
       toast.success(t('toast.welcomeBack'));
     } catch (error) {
       toast.error(error.response?.data?.detail || t('toast.invalidCredentials'));
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  const handleForgotPassword = async (e) => {
+    e.preventDefault();
+    setLoading(true);
+    
+    try {
+      await axios.post(`${API}/auth/forgot-password`, { email: formData.email });
+      toast.success(t('auth.resetEmailSent'));
+      setIsForgotPassword(false);
+    } catch (error) {
+      // Always show success message for security (don't reveal if email exists)
+      toast.success(t('auth.resetEmailSent'));
+      setIsForgotPassword(false);
     } finally {
       setLoading(false);
     }
