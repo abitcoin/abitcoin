@@ -185,6 +185,19 @@ export default function AuthPage({ onLogin }) {
                 />
               </div>
 
+              {isLogin && (
+                <div className="text-right">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPassword(true)}
+                    className="text-white/70 hover:text-white font-body text-sm transition-colors"
+                    data-testid="forgot-password-link"
+                  >
+                    {t('auth.forgotPassword')}
+                  </button>
+                </div>
+              )}
+
               <Button
                 type="submit"
                 disabled={loading}
@@ -194,8 +207,10 @@ export default function AuthPage({ onLogin }) {
                 {loading ? t('common.loading') : (isLogin ? t('auth.signIn') : t('auth.signUp'))}
               </Button>
             </form>
+            )}
 
             {/* Toggle */}
+            {!isForgotPassword && (
             <div className="text-center mt-6">
               <button
                 type="button"
@@ -209,6 +224,7 @@ export default function AuthPage({ onLogin }) {
                 }
               </button>
             </div>
+            )}
           </div>
         </div>
       </div>
