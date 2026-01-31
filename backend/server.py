@@ -183,6 +183,25 @@ class SendMessageRequest(BaseModel):
     recipient_id: str
     content: str
 
+# Circle Interpretation Models
+class CircleInterpretation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    circle_id: str
+    dream_id: str
+    dream_title: str
+    dream_content: str
+    user_id: str
+    user_name: str
+    interpretation: str
+    created_at: datetime
+
+class ShareDreamToCircleRequest(BaseModel):
+    dream_id: str
+
+class AddInterpretationRequest(BaseModel):
+    interpretation: str
+
 # Helper Functions
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
