@@ -225,7 +225,7 @@ export default function CommunityFeed({ user, onLogout }) {
                 </div>
 
                 {/* Content */}
-                <div className="mb-4" onClick={() => navigate(`/dreams/${dream.id}`)} className="cursor-pointer">
+                <div className="mb-4 cursor-pointer" onClick={() => navigate(`/dreams/${dream.id}`)}>
                   <h3 className="text-xl font-heading font-light text-void mb-2">{dream.title}</h3>
                   <p className="text-void/80 font-body line-clamp-3">{dream.content}</p>
                   
