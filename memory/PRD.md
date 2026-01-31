@@ -18,11 +18,13 @@ Build a dream-tracking application with the following features:
 14. Shareable dream cards (CSS/Canvas generated)
 15. Premium-only AI-artistic dream cards (Gemini Nano Banana)
 16. Social platform ("Connect with Other Dreamers") with freemium model
+17. **Multi-language UI support** (English, French, Finnish, Spanish, German)
 
 ## User Personas
 - **Casual Dreamers**: Users who want to record and understand their dreams
 - **Dream Enthusiasts**: Active users interested in AI analysis and community features
 - **Premium Users**: Users who want unlimited AI analyses, artwork generation, and circle creation
+- **International Users**: Users from different countries preferring their native language
 
 ## Core Requirements
 ### Authentication
@@ -56,6 +58,13 @@ Build a dream-tracking application with the following features:
 - Follow functionality
 - Daily limits for free users
 
+### Internationalization (i18n)
+- Full UI translation support
+- Languages: English, French, Finnish, Spanish, German
+- Browser language auto-detection
+- Language preference persisted in localStorage
+- "DreamWise" branding kept in English
+
 ## What's Been Implemented
 
 ### Completed Features (as of Jan 31, 2026)
@@ -74,13 +83,15 @@ Build a dream-tracking application with the following features:
 - [x] Community Feed page
 - [x] Dream Circles page
 - [x] Like/comment functionality
-- [x] **Community Hub page** - Central navigation for social features
+- [x] Community Hub page - Central navigation for social features
+- [x] **Multi-language UI** - Full i18n support with 5 languages
 
 ### Latest Update (Jan 31, 2026)
-- Built Community Hub page at `/community-hub`
-- Updated navigation across all pages to include "Community" link
-- Community Hub provides unified access to Feed and Circles
-- All 16 frontend tests passed (100% success rate)
+- Built multi-language support using react-i18next
+- Created translation files for EN, FR, FI, ES, DE
+- Added language selector component in navigation
+- Updated Landing, Auth, Dashboard, and Community Hub pages with translations
+- Language preference persists via localStorage
 
 ## Architecture
 
@@ -91,11 +102,15 @@ Build a dream-tracking application with the following features:
 - **Auth**: JWT
 - **Payments**: Stripe
 - **AI**: Emergent LLM Key (Gemini 3 Flash, Nano Banana)
+- **i18n**: react-i18next with browser language detection
 
 ### Key Files
 - `/app/backend/server.py` - All backend routes
 - `/app/frontend/src/App.js` - Main router
-- `/app/frontend/src/pages/CommunityHub.js` - New community hub
+- `/app/frontend/src/i18n/index.js` - i18n configuration
+- `/app/frontend/src/i18n/locales/` - Translation files (en, fr, fi, es, de)
+- `/app/frontend/src/components/LanguageSelector.js` - Language picker component
+- `/app/frontend/src/pages/CommunityHub.js` - Community hub
 - `/app/frontend/src/pages/CommunityFeed.js` - Social feed
 - `/app/frontend/src/pages/DreamCircles.js` - Circles page
 
@@ -113,8 +128,10 @@ Build a dream-tracking application with the following features:
 
 ### P0 (Critical)
 - [x] Community Hub page (COMPLETED)
+- [x] Multi-language UI (COMPLETED)
 
 ### P1 (High Priority)
+- [ ] Apply translations to remaining pages (DreamsLibrary, DreamDetail, DreamJournal, etc.)
 - [ ] User profiles with dream statistics
 - [ ] Test social platform freemium limits
 
