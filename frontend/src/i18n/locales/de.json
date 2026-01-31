@@ -15,7 +15,24 @@
     "heroTitle2": "deiner Träume",
     "heroDescription": "Erfasse, analysiere und verstehe deine Träume mit Hilfe von KI. Entdecke Muster, erschließe Bedeutungen und begib dich auf eine Reise durch dein Unterbewusstsein.",
     "startDreaming": "Jetzt Träumen",
-    "getStarted": "Loslegen"
+    "getStarted": "Loslegen",
+    "featuresTitle": "Deine Träume,",
+    "featuresItalic": "erleuchtet",
+    "featuresSubtitle": "Leistungsstarke Funktionen, um deine innere Welt zu verstehen",
+    "featureJournalTitle": "Traumtagebuch",
+    "featureJournalDesc": "Erfasse deine Träume mit reichhaltigen Details, Tags und Daten. Baue ein umfassendes Archiv deiner nächtlichen Reisen auf.",
+    "featureAnalysisTitle": "KI-Analyse",
+    "featureAnalysisDesc": "Erhalte aufschlussreiche Interpretationen durch fortschrittliche KI. Erkunde Symbole, Themen und verborgene Bedeutungen in deinen Träumen.",
+    "featurePatternsTitle": "Muster Verfolgen",
+    "featurePatternsDesc": "Entdecke wiederkehrende Themen und Trends. Verstehe, was dein Unterbewusstsein dir im Laufe der Zeit sagen will.",
+    "ctaTitle": "Bereit einzutauchen in",
+    "ctaItalic": "deine Träume?",
+    "ctaSubtitle": "Tritt DreamWise heute bei und beginne deine Reise der Selbstentdeckung",
+    "ctaButton": "Beginne Deine Reise"
+  },
+  "footer": {
+    "copyright": "© 2025 DreamWise. Alle Träume vorbehalten.",
+    "allDreamsReserved": "Alle Träume vorbehalten"
   },
   "auth": {
     "welcomeBack": "Willkommen Zurück",
