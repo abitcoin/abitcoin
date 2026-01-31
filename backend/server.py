@@ -159,6 +159,30 @@ class PaymentTransaction(BaseModel):
     created_at: datetime
     updated_at: datetime
 
+# Direct Messaging Models
+class DirectMessage(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    id: str
+    sender_id: str
+    sender_name: str
+    recipient_id: str
+    recipient_name: str
+    content: str
+    read: bool = False
+    created_at: datetime
+
+class Conversation(BaseModel):
+    model_config = ConfigDict(extra="ignore")
+    user_id: str
+    user_name: str
+    last_message: str
+    last_message_time: datetime
+    unread_count: int
+
+class SendMessageRequest(BaseModel):
+    recipient_id: str
+    content: str
+
 # Helper Functions
 def hash_password(password: str) -> str:
     return bcrypt.hashpw(password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
