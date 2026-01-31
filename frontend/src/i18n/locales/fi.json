@@ -30,7 +30,12 @@
     "noAccount": "Ei tiliä?",
     "haveAccount": "Onko sinulla tili?",
     "signUpLink": "Rekisteröidy",
-    "signInLink": "Kirjaudu"
+    "signInLink": "Kirjaudu",
+    "forgotPassword": "Unohditko salasanasi?",
+    "resetPassword": "Nollaa salasana",
+    "resetEmailSent": "Jos tili löytyy tällä sähköpostilla, saat salasanan nollauslinkin.",
+    "backToLogin": "Takaisin kirjautumiseen",
+    "enterEmail": "Syötä sähköpostiosoitteesi"
   },
   "dashboard": {
     "welcomeBack": "Tervetuloa takaisin,",
