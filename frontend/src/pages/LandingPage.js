@@ -81,10 +81,10 @@ export default function LandingPage() {
       <section className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="text-center mb-16">
           <h2 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-4">
-            Your dreams, <span className="italic">illuminated</span>
+            {t('landing.featuresTitle')} <span className="italic">{t('landing.featuresItalic')}</span>
           </h2>
           <p className="text-lg text-void/70 font-body tracking-wide">
-            Powerful features to help you understand your inner world
+            {t('landing.featuresSubtitle')}
           </p>
         </div>
 
@@ -94,9 +94,9 @@ export default function LandingPage() {
             <div className="w-14 h-14 bg-ethereal/20 rounded-2xl flex items-center justify-center mb-4">
               <BookOpen className="w-7 h-7 text-void" />
             </div>
-            <h3 className="text-2xl font-heading font-light text-void mb-3">Dream Journal</h3>
+            <h3 className="text-2xl font-heading font-light text-void mb-3">{t('landing.featureJournalTitle')}</h3>
             <p className="text-void/70 font-body leading-relaxed">
-              Capture your dreams with rich details, tags, and dates. Build a comprehensive archive of your nocturnal journeys.
+              {t('landing.featureJournalDesc')}
             </p>
           </div>
 
@@ -105,9 +105,9 @@ export default function LandingPage() {
             <div className="w-14 h-14 bg-lucid/20 rounded-2xl flex items-center justify-center mb-4">
               <Brain className="w-7 h-7 text-void" />
             </div>
-            <h3 className="text-2xl font-heading font-light text-void mb-3">AI Analysis</h3>
+            <h3 className="text-2xl font-heading font-light text-void mb-3">{t('landing.featureAnalysisTitle')}</h3>
             <p className="text-void/70 font-body leading-relaxed">
-              Get insightful interpretations powered by advanced AI. Explore symbols, themes, and hidden meanings in your dreams.
+              {t('landing.featureAnalysisDesc')}
             </p>
           </div>
 
@@ -116,9 +116,9 @@ export default function LandingPage() {
             <div className="w-14 h-14 bg-ethereal/20 rounded-2xl flex items-center justify-center mb-4">
               <TrendingUp className="w-7 h-7 text-void" />
             </div>
-            <h3 className="text-2xl font-heading font-light text-void mb-3">Track Patterns</h3>
+            <h3 className="text-2xl font-heading font-light text-void mb-3">{t('landing.featurePatternsTitle')}</h3>
             <p className="text-void/70 font-body leading-relaxed">
-              Discover recurring themes and trends. Understand what your subconscious is trying to tell you over time.
+              {t('landing.featurePatternsDesc')}
             </p>
           </div>
         </div>
@@ -128,17 +128,17 @@ export default function LandingPage() {
       <section className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-20">
         <div className="glass-effect rounded-3xl p-12 text-center">
           <h2 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-4">
-            Ready to dive into <span className="italic">your dreams?</span>
+            {t('landing.ctaTitle')} <span className="italic">{t('landing.ctaItalic')}</span>
           </h2>
           <p className="text-lg text-void/70 font-body tracking-wide mb-8">
-            Join DreamWise today and start your journey of self-discovery
+            {t('landing.ctaSubtitle')}
           </p>
           <Button
             onClick={() => navigate('/auth')}
             className="bg-void text-white hover:bg-void/90 rounded-full px-10 py-6 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
             data-testid="get-started-cta-button"
           >
-            Begin Your Journey
+            {t('landing.ctaButton')}
           </Button>
         </div>
       </section>
