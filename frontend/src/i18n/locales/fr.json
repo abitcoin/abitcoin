@@ -207,6 +207,21 @@
     "circleCreated": "Cercle créé !",
     "welcomeBack": "Bon retour !",
     "invalidCredentials": "Identifiants invalides",
-    "analysisComplete": "Analyse terminée !"
+    "analysisComplete": "Analyse terminée !",
+    "messageSent": "Message envoyé !"
+  },
+  "messages": {
+    "title": "Messages",
+    "subtitle": "Connectez-vous avec les rêveurs",
+    "noConversations": "Pas de conversations",
+    "startChat": "Commencer une conversation",
+    "searchPlaceholder": "Rechercher des rêveurs...",
+    "typePlaceholder": "Écrivez un message...",
+    "send": "Envoyer",
+    "back": "Retour",
+    "unread": "non lu(s)",
+    "noMessages": "Pas de messages. Dites bonjour !",
+    "searchResults": "Résultats de recherche",
+    "noResults": "Aucun rêveur trouvé"
   }
 }
