@@ -972,6 +972,148 @@ async def join_circle(circle_id: str, user_id: str = Depends(get_current_user)):
         )
         return {"message": "Joined circle", "joined": True}
 
+# Direct Messaging Routes
+@api_router.get("/messages/conversations")
+async def get_conversations(user_id: str = Depends(get_current_user)):
+    """Get all conversations for the current user"""
+    # Find all messages where user is sender or recipient
+    pipeline = [
+        {
+            "$match": {
+                "$or": [{"sender_id": user_id}, {"recipient_id": user_id}]
+            }
+        },
+        {"$sort": {"created_at": -1}},
+        {
+            "$group": {
+                "_id": {
+                    "$cond": [
+                        {"$eq": ["$sender_id", user_id]},
+                        "$recipient_id",
+                        "$sender_id"
+                    ]
+                },
+                "other_user_name": {
+                    "$first": {
+                        "$cond": [
+                            {"$eq": ["$sender_id", user_id]},
+                            "$recipient_name",
+                            "$sender_name"
+                        ]
+                    }
+                },
+                "last_message": {"$first": "$content"},
+                "last_message_time": {"$first": "$created_at"},
+                "unread_count": {
+                    "$sum": {
+                        "$cond": [
+                            {"$and": [
+                                {"$eq": ["$recipient_id", user_id]},
+                                {"$eq": ["$read", False]}
+                            ]},
+                            1,
+                            0
+                        ]
+                    }
+                }
+            }
+        },
+        {"$sort": {"last_message_time": -1}}
+    ]
+    
+    conversations = await db.messages.aggregate(pipeline).to_list(100)
+    
+    return [
+        {
+            "user_id": conv["_id"],
+            "user_name": conv["other_user_name"],
+            "last_message": conv["last_message"],
+            "last_message_time": conv["last_message_time"].isoformat() if conv["last_message_time"] else None,
+            "unread_count": conv["unread_count"]
+        }
+        for conv in conversations
+    ]
+
+@api_router.get("/messages/{other_user_id}")
+async def get_messages(other_user_id: str, user_id: str = Depends(get_current_user)):
+    """Get all messages between current user and another user"""
+    messages = await db.messages.find(
+        {
+            "$or": [
+                {"sender_id": user_id, "recipient_id": other_user_id},
+                {"sender_id": other_user_id, "recipient_id": user_id}
+            ]
+        },
+        {"_id": 0}
+    ).sort("created_at", 1).to_list(100)
+    
+    # Mark messages as read
+    await db.messages.update_many(
+        {"sender_id": other_user_id, "recipient_id": user_id, "read": False},
+        {"$set": {"read": True}}
+    )
+    
+    return messages
+
+@api_router.post("/messages")
+async def send_message(message_req: SendMessageRequest, user_id: str = Depends(get_current_user)):
+    """Send a direct message to another user"""
+    # Get sender info
+    sender = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
+    if not sender:
+        raise HTTPException(status_code=404, detail="Sender not found")
+    
+    # Get recipient info
+    recipient = await db.users.find_one({"id": message_req.recipient_id}, {"_id": 0, "name": 1})
+    if not recipient:
+        raise HTTPException(status_code=404, detail="Recipient not found")
+    
+    # Prevent sending to self
+    if user_id == message_req.recipient_id:
+        raise HTTPException(status_code=400, detail="Cannot send message to yourself")
+    
+    # Create message
+    now = datetime.now(timezone.utc)
+    message_doc = {
+        "id": str(uuid.uuid4()),
+        "sender_id": user_id,
+        "sender_name": sender["name"],
+        "recipient_id": message_req.recipient_id,
+        "recipient_name": recipient["name"],
+        "content": message_req.content,
+        "read": False,
+        "created_at": now
+    }
+    
+    await db.messages.insert_one(message_doc)
+    
+    return {
+        "id": message_doc["id"],
+        "sender_id": message_doc["sender_id"],
+        "sender_name": message_doc["sender_name"],
+        "recipient_id": message_doc["recipient_id"],
+        "recipient_name": message_doc["recipient_name"],
+        "content": message_doc["content"],
+        "read": message_doc["read"],
+        "created_at": message_doc["created_at"].isoformat()
+    }
+
+@api_router.get("/users/search")
+async def search_users(q: str, user_id: str = Depends(get_current_user)):
+    """Search for users by name"""
+    if not q or len(q) < 2:
+        return []
+    
+    users = await db.users.find(
+        {
+            "id": {"$ne": user_id},  # Exclude current user
+            "name": {"$regex": q, "$options": "i"}
+        },
+        {"_id": 0, "id": 1, "name": 1, "is_premium": 1}
+    ).limit(10).to_list(10)
+    
+    return users
+
 # Payment Routes
 PREMIUM_PACKAGES = {
     "monthly": {"amount": 9.99, "name": "Premium Monthly", "description": "AI dream analysis for 30 days"},
