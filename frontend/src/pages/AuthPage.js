@@ -88,14 +88,58 @@ export default function AuthPage({ onLogin }) {
                 <Sparkles className="w-6 h-6 text-lucid" />
               </div>
               <h1 className="text-3xl font-heading font-light text-white tracking-tight">
-                {isLogin ? t('auth.welcomeBack') : t('auth.createAccount')}
+                {isForgotPassword 
+                  ? t('auth.resetPassword')
+                  : (isLogin ? t('auth.welcomeBack') : t('auth.createAccount'))
+                }
               </h1>
               <p className="text-white/80 mt-2 font-body">
-                {isLogin ? t('auth.enterRealm') : t('auth.joinDreamers')}
+                {isForgotPassword
+                  ? t('auth.enterEmail')
+                  : (isLogin ? t('auth.enterRealm') : t('auth.joinDreamers'))
+                }
               </p>
             </div>
 
-            {/* Form */}
+            {/* Forgot Password Form */}
+            {isForgotPassword ? (
+              <form onSubmit={handleForgotPassword} className="space-y-4" data-testid="forgot-password-form">
+                <div>
+                  <Label htmlFor="email" className="text-white font-body">{t('auth.email')}</Label>
+                  <Input
+                    id="email"
+                    type="email"
+                    placeholder="your@email.com"
+                    value={formData.email}
+                    onChange={(e) => setFormData({...formData, email: e.target.value})}
+                    className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl h-12 mt-1"
+                    required
+                    data-testid="forgot-email-input"
+                  />
+                </div>
+
+                <Button
+                  type="submit"
+                  disabled={loading}
+                  className="w-full bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95 mt-6"
+                  data-testid="reset-button"
+                >
+                  {loading ? t('common.loading') : t('auth.resetPassword')}
+                </Button>
+
+                <div className="text-center mt-4">
+                  <button
+                    type="button"
+                    onClick={() => setIsForgotPassword(false)}
+                    className="text-white/90 hover:text-white font-body text-sm transition-colors"
+                    data-testid="back-to-login-button"
+                  >
+                    {t('auth.backToLogin')}
+                  </button>
+                </div>
+              </form>
+            ) : (
+            /* Login/Signup Form */
             <form onSubmit={handleSubmit} className="space-y-4" data-testid="auth-form">
               {!isLogin && (
                 <div>
