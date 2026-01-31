@@ -96,6 +96,14 @@ export default function DreamJournal({ user, onLogout }) {
                 >
                   My Dreams
                 </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/community-hub')}
+                  className="font-body text-void hover:text-void/80"
+                  data-testid="nav-community-hub"
+                >
+                  Community
+                </Button>
                 {!user?.is_premium && (
                   <Button
                     variant="ghost"
