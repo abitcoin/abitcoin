@@ -52,7 +52,7 @@ export default function Dashboard({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -60,7 +60,7 @@ export default function Dashboard({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -68,7 +68,7 @@ export default function Dashboard({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -77,19 +77,20 @@ export default function Dashboard({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
               <Button
                 onClick={() => navigate('/journal')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="new-dream-button"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                New Dream
+                {t('nav.newDream')}
               </Button>
               <Button
                 variant="ghost"
