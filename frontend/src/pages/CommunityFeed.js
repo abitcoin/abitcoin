@@ -137,7 +137,15 @@ export default function CommunityFeed({ user, onLogout }) {
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
                   data-testid="nav-community"
                 >
-                  Community
+                  Feed
+                </Button>
+                <Button
+                  variant="ghost"
+                  onClick={() => navigate('/circles')}
+                  className="font-body text-void hover:text-void/80"
+                  data-testid="nav-circles"
+                >
+                  Circles
                 </Button>
                 {!user?.is_premium && (
                   <Button
