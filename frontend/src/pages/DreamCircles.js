@@ -228,36 +228,52 @@ export default function DreamCircles({ user, onLogout }) {
                 className="glass-effect rounded-3xl p-6 hover:shadow-lg transition-all duration-300 dream-card-hover"
                 data-testid={`circle-${circle.id}`}
               >
-                <div className="flex items-start justify-between mb-4">
-                  <div className="w-12 h-12 bg-lucid/20 rounded-2xl flex items-center justify-center">
-                    <Users className="w-6 h-6 text-void" />
+                <div 
+                  className="cursor-pointer"
+                  onClick={() => isMember(circle) && navigate(`/circles/${circle.id}`)}
+                >
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="w-12 h-12 bg-lucid/20 rounded-2xl flex items-center justify-center">
+                      <Users className="w-6 h-6 text-void" />
+                    </div>
+                    {circle.is_private ? (
+                      <Lock className="w-4 h-4 text-void/40" />
+                    ) : (
+                      <Globe className="w-4 h-4 text-void/40" />
+                    )}
                   </div>
-                  {circle.is_private ? (
-                    <Lock className="w-4 h-4 text-void/40" />
-                  ) : (
-                    <Globe className="w-4 h-4 text-void/40" />
-                  )}
-                </div>
 
-                <h3 className="text-xl font-heading font-light text-void mb-2">{circle.name}</h3>
-                <p className="text-void/70 font-body text-sm mb-4 line-clamp-2">{circle.description}</p>
+                  <h3 className="text-xl font-heading font-light text-void mb-2">{circle.name}</h3>
+                  <p className="text-void/70 font-body text-sm mb-4 line-clamp-2">{circle.description}</p>
+                </div>
 
                 <div className="flex items-center justify-between pt-4 border-t border-white/30">
                   <div className="text-sm text-void/60 font-body">
                     {circle.member_count} {circle.member_count === 1 ? t('circles.member') : t('circles.members')}
                   </div>
                   
-                  <Button
-                    onClick={() => handleJoinCircle(circle.id)}
-                    className={`rounded-full font-body text-sm transition-all duration-300 ${
-                      isMember(circle)
-                        ? 'bg-white/30 text-void hover:bg-white/50'
-                        : 'bg-lucid text-void hover:bg-lucid/90'
-                    }`}
-                    data-testid={`join-circle-${circle.id}`}
-                  >
-                    {isMember(circle) ? t('circles.leave') : t('circles.join')}
-                  </Button>
+                  <div className="flex gap-2">
+                    {isMember(circle) && (
+                      <Button
+                        onClick={() => navigate(`/circles/${circle.id}`)}
+                        className="bg-ethereal/50 text-void hover:bg-ethereal/70 rounded-full font-body text-sm"
+                        data-testid={`view-circle-${circle.id}`}
+                      >
+                        {t('circles.viewCircle')}
+                      </Button>
+                    )}
+                    <Button
+                      onClick={() => handleJoinCircle(circle.id)}
+                      className={`rounded-full font-body text-sm transition-all duration-300 ${
+                        isMember(circle)
+                          ? 'bg-white/30 text-void hover:bg-white/50'
+                          : 'bg-lucid text-void hover:bg-lucid/90'
+                      }`}
+                      data-testid={`join-circle-${circle.id}`}
+                    >
+                      {isMember(circle) ? t('circles.leave') : t('circles.join')}
+                    </Button>
+                  </div>
                 </div>
 
                 {circle.creator_name && (
