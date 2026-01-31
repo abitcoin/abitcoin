@@ -268,6 +268,58 @@ export default function AuthPage({ onLogin }) {
           </div>
         </div>
       </div>
+
+      {/* Terms of Service Modal */}
+      {showTerms && (
+        <div className="fixed inset-0 bg-void/70 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowTerms(false)}>
+          <div className="bg-white rounded-3xl p-8 max-w-2xl w-full max-h-[80vh] overflow-y-auto" onClick={(e) => e.stopPropagation()}>
+            <div className="flex justify-between items-center mb-6">
+              <h2 className="text-2xl font-heading font-light text-void">{t('terms.title')}</h2>
+              <button
+                onClick={() => setShowTerms(false)}
+                className="text-void/60 hover:text-void transition-colors text-2xl"
+              >
+                ×
+              </button>
+            </div>
+            
+            <div className="space-y-6 text-void/80 font-body">
+              <p className="text-sm text-void/60">{t('terms.lastUpdated')}: January 2026</p>
+              
+              <p>{t('terms.intro')}</p>
+              
+              <div>
+                <h3 className="font-heading text-void mb-2">{t('terms.prohibited')}</h3>
+                <p>{t('terms.prohibitedText')}</p>
+              </div>
+              
+              <div>
+                <h3 className="font-heading text-void mb-2">{t('terms.ageRequirement')}</h3>
+                <p>{t('terms.ageText')}</p>
+              </div>
+              
+              <div>
+                <h3 className="font-heading text-void mb-2">{t('terms.privacy')}</h3>
+                <p>{t('terms.privacyText')}</p>
+              </div>
+              
+              <p>{t('terms.termination')}</p>
+              
+              <div>
+                <h3 className="font-heading text-void mb-2">{t('terms.contact')}</h3>
+                <p>{t('terms.contactText')}: <a href="mailto:dreamer1@dreamwise.fi" className="text-lucid hover:underline">dreamer1@dreamwise.fi</a></p>
+              </div>
+            </div>
+            
+            <Button
+              onClick={() => setShowTerms(false)}
+              className="w-full mt-6 bg-void text-white hover:bg-void/90 rounded-full h-12"
+            >
+              {t('auth.backToLogin')}
+            </Button>
+          </div>
+        </div>
+      )}
     </div>
   );
 }
