@@ -12,6 +12,7 @@ import PaymentSuccess from "@/pages/PaymentSuccess";
 import CommunityFeed from "@/pages/CommunityFeed";
 import DreamCircles from "@/pages/DreamCircles";
 import CommunityHub from "@/pages/CommunityHub";
+import Messages from "@/pages/Messages";
 import "@/App.css";
 
 function App() {
@@ -55,6 +56,8 @@ function App() {
           <Route path="/community-hub" element={token ? <CommunityHub user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/community" element={token ? <CommunityFeed user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/circles" element={token ? <DreamCircles user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
+          <Route path="/messages" element={token ? <Messages user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
+          <Route path="/messages/:recipientId" element={token ? <Messages user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
