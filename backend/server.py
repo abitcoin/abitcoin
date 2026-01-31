@@ -54,6 +54,11 @@ class User(BaseModel):
     name: str
     is_premium: bool = False
     ai_analysis_count: int = 0
+    daily_likes_count: int = 0
+    daily_comments_count: int = 0
+    last_activity_date: Optional[str] = None
+    followers_count: int = 0
+    following_count: int = 0
     created_at: datetime
 
 class TokenResponse(BaseModel):
