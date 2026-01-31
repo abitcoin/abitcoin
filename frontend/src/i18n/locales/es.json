@@ -15,7 +15,20 @@
     "heroTitle2": "de tus sueños",
     "heroDescription": "Registra, analiza y comprende tus sueños con la ayuda de la IA. Descubre patrones, desbloquea significados y emprende un viaje por tu subconsciente.",
     "startDreaming": "Empezar a Soñar",
-    "getStarted": "Comenzar"
+    "getStarted": "Comenzar",
+    "featuresTitle": "Tus sueños,",
+    "featuresItalic": "iluminados",
+    "featuresSubtitle": "Funciones poderosas para comprender tu mundo interior",
+    "featureJournalTitle": "Diario de Sueños",
+    "featureJournalDesc": "Captura tus sueños con detalles ricos, etiquetas y fechas. Construye un archivo completo de tus viajes nocturnos.",
+    "featureAnalysisTitle": "Análisis con IA",
+    "featureAnalysisDesc": "Obtén interpretaciones perspicaces con IA avanzada. Explora símbolos, temas y significados ocultos en tus sueños.",
+    "featurePatternsTitle": "Rastrea Patrones",
+    "featurePatternsDesc": "Descubre temas y tendencias recurrentes. Comprende lo que tu subconsciente intenta decirte con el tiempo.",
+    "ctaTitle": "¿Listo para sumergirte en",
+    "ctaItalic": "tus sueños?",
+    "ctaSubtitle": "Únete a DreamWise hoy y comienza tu viaje de autodescubrimiento",
+    "ctaButton": "Comienza Tu Viaje"
   },
   "footer": {
     "copyright": "© 2025 DreamWise. Todos los sueños reservados.",
