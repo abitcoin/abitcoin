@@ -207,6 +207,21 @@
     "circleCreated": "Piiri luotu!",
     "welcomeBack": "Tervetuloa takaisin!",
     "invalidCredentials": "Virheelliset tunnistetiedot",
-    "analysisComplete": "Analyysi valmis!"
+    "analysisComplete": "Analyysi valmis!",
+    "messageSent": "Viesti lähetetty!"
+  },
+  "messages": {
+    "title": "Viestit",
+    "subtitle": "Yhdistä unelmoijien kanssa",
+    "noConversations": "Ei keskusteluja",
+    "startChat": "Aloita keskustelu",
+    "searchPlaceholder": "Etsi unelmoijia...",
+    "typePlaceholder": "Kirjoita viesti...",
+    "send": "Lähetä",
+    "back": "Takaisin",
+    "unread": "lukematonta",
+    "noMessages": "Ei viestejä. Sano hei!",
+    "searchResults": "Hakutulokset",
+    "noResults": "Unelmoijia ei löytynyt"
   }
 }
