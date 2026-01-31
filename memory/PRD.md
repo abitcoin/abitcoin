@@ -84,7 +84,8 @@ Build a dream-tracking application with the following features:
 - [x] Dream Circles page
 - [x] Like/comment functionality
 - [x] Community Hub page - Central navigation for social features
-- [x] **Multi-language UI** - Full i18n support with 5 languages
+- [x] **Multi-language UI** - Full i18n support with 5 languages (EN, FR, FI, ES, DE)
+- [x] **Direct Messaging** - Real-time chat between users with conversation list
 
 ### Latest Update (Jan 31, 2026)
 - Built multi-language support using react-i18next
