@@ -32,7 +32,7 @@ export default function CommunityFeed({ user, onLogout }) {
       });
       setFeed(response.data);
     } catch (error) {
-      toast.error("Failed to load feed");
+      toast.error(t('common.error'));
     } finally {
       setLoading(false);
     }
@@ -56,7 +56,7 @@ export default function CommunityFeed({ user, onLogout }) {
       
       toast.success(response.data.message);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to like dream");
+      toast.error(error.response?.data?.detail || t('common.error'));
     }
   };
 
@@ -71,7 +71,7 @@ export default function CommunityFeed({ user, onLogout }) {
         });
         setShowComments({ ...showComments, [dreamId]: response.data });
       } catch (error) {
-        toast.error("Failed to load comments");
+        toast.error(t('common.error'));
       }
     }
   };
@@ -95,9 +95,9 @@ export default function CommunityFeed({ user, onLogout }) {
       
       setCommentText("");
       setCommentingOn(null);
-      toast.success("Comment added!");
+      toast.success(t('toast.commentAdded'));
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to add comment");
+      toast.error(error.response?.data?.detail || t('common.error'));
     }
   };
 
@@ -124,7 +124,7 @@ export default function CommunityFeed({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -132,7 +132,7 @@ export default function CommunityFeed({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -140,7 +140,7 @@ export default function CommunityFeed({ user, onLogout }) {
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -149,19 +149,20 @@ export default function CommunityFeed({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
               <Button
                 onClick={() => navigate('/journal')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="new-dream-button"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                New Dream
+                {t('nav.newDream')}
               </Button>
               <Button
                 variant="ghost"
@@ -180,25 +181,25 @@ export default function CommunityFeed({ user, onLogout }) {
       <div className="max-w-4xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
         <div className="mb-8">
           <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2">
-            Community <span className="italic">Feed</span>
+            {t('feed.title')} <span className="italic">{t('feed.titleItalic')}</span>
           </h1>
           <p className="text-lg text-void/70 font-body tracking-wide">
-            Explore dreams from dreamers around the world
+            {t('feed.subtitle')}
           </p>
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-void/60 font-body">Loading feed...</p>
+            <p className="text-void/60 font-body">{t('feed.loading')}</p>
           </div>
         ) : feed.length === 0 ? (
           <div className="glass-effect rounded-3xl p-12 text-center">
-            <p className="text-void/60 font-body mb-4">No public dreams yet</p>
+            <p className="text-void/60 font-body mb-4">{t('feed.noPublicDreams')}</p>
             <Button
               onClick={() => navigate('/journal')}
               className="bg-void text-white hover:bg-void/90 rounded-full font-body"
             >
-              Share Your First Dream
+              {t('feed.shareFirst')}
             </Button>
           </div>
         ) : (
