@@ -256,7 +256,7 @@ export default function CommunityFeed({ user, onLogout }) {
                     className="flex items-center gap-2 text-void/70 hover:text-void transition-colors"
                   >
                     <MessageCircle className="w-5 h-5" />
-                    <span className="text-sm font-body">Comments</span>
+                    <span className="text-sm font-body">{t('feed.comments')}</span>
                   </button>
                 </div>
 
@@ -266,7 +266,7 @@ export default function CommunityFeed({ user, onLogout }) {
                     {/* Add Comment */}
                     <div className="mb-4">
                       <Textarea
-                        placeholder="Add a comment..."
+                        placeholder={t('feed.addComment')}
                         value={commentingOn === dream.id ? commentText : ""}
                         onChange={(e) => {
                           setCommentText(e.target.value);
@@ -279,7 +279,7 @@ export default function CommunityFeed({ user, onLogout }) {
                         disabled={!commentText.trim()}
                         className="bg-void text-white hover:bg-void/90 rounded-full font-body text-sm"
                       >
-                        Post Comment
+                        {t('feed.postComment')}
                       </Button>
                     </div>
 
