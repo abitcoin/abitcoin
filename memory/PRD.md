@@ -152,6 +152,9 @@ Build a dream-tracking application with the following features:
 - **Deployment Pipeline**: Live site may not update immediately after redeploy (platform issue, not code)
 - Use preview environment for testing: https://slumbervision.preview.emergentagent.com
 
+## Resolved Issues
+- **AI Artwork Download**: Fixed on Jan 31, 2026 - Download now works correctly with proper file extension and cross-browser support
+
 ## Test Credentials
 - Email: `testhub@dreamwise.com`
 - Password: `password123`
