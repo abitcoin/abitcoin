@@ -208,10 +208,40 @@ export default function AuthPage({ onLogin }) {
                 </div>
               )}
 
+              {!isLogin && (
+                <div className="flex items-start space-x-3 mt-4">
+                  <Checkbox
+                    id="terms"
+                    checked={agreedToTerms}
+                    onCheckedChange={setAgreedToTerms}
+                    className="mt-1 border-white/50 data-[state=checked]:bg-lucid data-[state=checked]:border-lucid"
+                    data-testid="terms-checkbox"
+                  />
+                  <label htmlFor="terms" className="text-sm text-white/90 font-body leading-relaxed">
+                    {t('auth.agreeToTerms')}{' '}
+                    <button
+                      type="button"
+                      onClick={() => setShowTerms(true)}
+                      className="text-lucid hover:text-lucid/80 underline"
+                    >
+                      {t('auth.termsOfService')}
+                    </button>
+                    {' '}{t('auth.and')}{' '}
+                    <button
+                      type="button"
+                      onClick={() => setShowTerms(true)}
+                      className="text-lucid hover:text-lucid/80 underline"
+                    >
+                      {t('auth.privacyPolicy')}
+                    </button>
+                  </label>
+                </div>
+              )}
+
               <Button
                 type="submit"
-                disabled={loading}
-                className="w-full bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95 mt-6"
+                disabled={loading || (!isLogin && !agreedToTerms)}
+                className="w-full bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95 mt-6 disabled:opacity-50 disabled:cursor-not-allowed"
                 data-testid="submit-button"
               >
                 {loading ? t('common.loading') : (isLogin ? t('auth.signIn') : t('auth.signUp'))}
