@@ -17,6 +17,10 @@
     "startDreaming": "Commencer à Rêver",
     "getStarted": "Commencer"
   },
+  "footer": {
+    "copyright": "© 2025 DreamWise. Tous les rêves réservés.",
+    "allDreamsReserved": "Tous les rêves réservés"
+  },
   "auth": {
     "welcomeBack": "Bon Retour",
     "createAccount": "Créer un Compte",
