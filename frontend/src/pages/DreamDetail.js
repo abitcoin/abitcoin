@@ -301,12 +301,20 @@ export default function DreamDetail({ user, onLogout }) {
       );
       
       if (response.data.success && response.data.image) {
+        // Determine file extension from mime type
+        const mimeType = response.data.mime_type || 'image/png';
+        const extension = mimeType.includes('jpeg') || mimeType.includes('jpg') ? 'jpg' : 'png';
+        
         // Create and download the artwork
-        const imageData = `data:${response.data.mime_type};base64,${response.data.image}`;
+        const imageData = `data:${mimeType};base64,${response.data.image}`;
         const link = document.createElement('a');
-        link.download = `dreamwise-artwork-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+        link.download = `dreamwise-artwork-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${extension}`;
         link.href = imageData;
+        
+        // Append to body, click, then remove (required for some browsers)
+        document.body.appendChild(link);
         link.click();
+        document.body.removeChild(link);
         
         toast.success("AI Artwork generated and downloaded!");
       }
