@@ -677,6 +677,277 @@ async def get_dream_stats(user_id: str = Depends(get_current_user)):
         recent_dreams=recent_dreams
     )
 
+# Social Platform Routes
+
+# Public Feed
+@api_router.get("/feed")
+async def get_public_feed(
+    skip: int = 0,
+    limit: int = 20,
+    user_id: str = Depends(get_current_user)
+):
+    """Get public dreams feed"""
+    # Get public dreams sorted by recent
+    dreams = await db.dreams.find(
+        {"is_public": True},
+        {"_id": 0}
+    ).sort("created_at", -1).skip(skip).limit(limit).to_list(limit)
+    
+    # Get user info for each dream
+    feed_items = []
+    for dream in dreams:
+        user = await db.users.find_one({"id": dream["user_id"]}, {"_id": 0, "name": 1, "is_premium": 1})
+        
+        # Check if current user liked this dream
+        like = await db.likes.find_one({"dream_id": dream["id"], "user_id": user_id}, {"_id": 0})
+        
+        feed_items.append({
+            **dream,
+            "user_name": user.get("name", "Unknown") if user else "Unknown",
+            "user_is_premium": user.get("is_premium", False) if user else False,
+            "liked_by_me": like is not None
+        })
+    
+    return feed_items
+
+# Like Dream
+@api_router.post("/dreams/{dream_id}/like")
+async def like_dream(dream_id: str, user_id: str = Depends(get_current_user)):
+    """Like or unlike a dream"""
+    # Check if dream exists and is public
+    dream = await db.dreams.find_one({"id": dream_id, "is_public": True}, {"_id": 0})
+    if not dream:
+        raise HTTPException(status_code=404, detail="Dream not found or not public")
+    
+    # Check if already liked
+    existing_like = await db.likes.find_one({"dream_id": dream_id, "user_id": user_id}, {"_id": 0})
+    
+    if existing_like:
+        # Unlike
+        await db.likes.delete_one({"dream_id": dream_id, "user_id": user_id})
+        await db.dreams.update_one({"id": dream_id}, {"$inc": {"likes_count": -1}})
+        return {"message": "Dream unliked", "liked": False}
+    else:
+        # Check daily limit
+        can_like = await check_daily_limit(user_id, "likes", 10)
+        if not can_like:
+            raise HTTPException(
+                status_code=403,
+                detail="Daily like limit reached (10/day). Upgrade to Premium for unlimited likes!"
+            )
+        
+        # Like
+        like_doc = {
+            "id": str(uuid.uuid4()),
+            "dream_id": dream_id,
+            "user_id": user_id,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.likes.insert_one(like_doc)
+        await db.dreams.update_one({"id": dream_id}, {"$inc": {"likes_count": 1}})
+        await increment_daily_counter(user_id, "likes")
+        
+        return {"message": "Dream liked", "liked": True}
+
+# Get Comments
+@api_router.get("/dreams/{dream_id}/comments")
+async def get_comments(dream_id: str, user_id: str = Depends(get_current_user)):
+    """Get comments for a dream"""
+    comments = await db.comments.find({"dream_id": dream_id}, {"_id": 0}).sort("created_at", -1).to_list(100)
+    return comments
+
+# Add Comment
+@api_router.post("/dreams/{dream_id}/comments")
+async def add_comment(
+    dream_id: str,
+    content: str,
+    user_id: str = Depends(get_current_user)
+):
+    """Add a comment to a dream"""
+    # Check if dream exists and is public
+    dream = await db.dreams.find_one({"id": dream_id, "is_public": True}, {"_id": 0})
+    if not dream:
+        raise HTTPException(status_code=404, detail="Dream not found or not public")
+    
+    # Check daily limit
+    can_comment = await check_daily_limit(user_id, "comments", 3)
+    if not can_comment:
+        raise HTTPException(
+            status_code=403,
+            detail="Daily comment limit reached (3/day). Upgrade to Premium for unlimited comments!"
+        )
+    
+    # Get user name
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1})
+    
+    # Create comment
+    comment_doc = {
+        "id": str(uuid.uuid4()),
+        "dream_id": dream_id,
+        "user_id": user_id,
+        "user_name": user.get("name", "Unknown") if user else "Unknown",
+        "content": content,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.comments.insert_one(comment_doc)
+    await increment_daily_counter(user_id, "comments")
+    
+    return comment_doc
+
+# Follow User
+@api_router.post("/users/{target_user_id}/follow")
+async def follow_user(target_user_id: str, user_id: str = Depends(get_current_user)):
+    """Follow or unfollow a user"""
+    if target_user_id == user_id:
+        raise HTTPException(status_code=400, detail="Cannot follow yourself")
+    
+    # Check if target user exists
+    target_user = await db.users.find_one({"id": target_user_id}, {"_id": 0})
+    if not target_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if already following
+    existing_follow = await db.follows.find_one({"follower_id": user_id, "following_id": target_user_id}, {"_id": 0})
+    
+    if existing_follow:
+        # Unfollow
+        await db.follows.delete_one({"follower_id": user_id, "following_id": target_user_id})
+        await db.users.update_one({"id": user_id}, {"$inc": {"following_count": -1}})
+        await db.users.update_one({"id": target_user_id}, {"$inc": {"followers_count": -1}})
+        return {"message": "Unfollowed", "following": False}
+    else:
+        # Check follow limit for free users
+        user_doc = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user_doc.get("is_premium", False):
+            following_count = user_doc.get("following_count", 0)
+            if following_count >= 20:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Follow limit reached (20 max). Upgrade to Premium for unlimited follows!"
+                )
+        
+        # Follow
+        follow_doc = {
+            "id": str(uuid.uuid4()),
+            "follower_id": user_id,
+            "following_id": target_user_id,
+            "created_at": datetime.now(timezone.utc).isoformat()
+        }
+        await db.follows.insert_one(follow_doc)
+        await db.users.update_one({"id": user_id}, {"$inc": {"following_count": 1}})
+        await db.users.update_one({"id": target_user_id}, {"$inc": {"followers_count": 1}})
+        
+        return {"message": "Followed", "following": True}
+
+# Get User Profile
+@api_router.get("/users/{profile_user_id}/profile")
+async def get_user_profile(profile_user_id: str, user_id: str = Depends(get_current_user)):
+    """Get user profile with their public dreams"""
+    user = await db.users.find_one({"id": profile_user_id}, {"_id": 0, "password": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    # Check if current user follows this user
+    follow = await db.follows.find_one({"follower_id": user_id, "following_id": profile_user_id}, {"_id": 0})
+    
+    # Get user's public dreams
+    dreams = await db.dreams.find(
+        {"user_id": profile_user_id, "is_public": True},
+        {"_id": 0}
+    ).sort("created_at", -1).limit(10).to_list(10)
+    
+    return {
+        "user": user,
+        "following": follow is not None,
+        "public_dreams": dreams
+    }
+
+# Dream Circles
+@api_router.get("/circles")
+async def get_circles(user_id: str = Depends(get_current_user)):
+    """Get all public circles and user's circles"""
+    circles = await db.circles.find(
+        {"$or": [{"is_private": False}, {"member_ids": user_id}]},
+        {"_id": 0}
+    ).to_list(100)
+    return circles
+
+@api_router.post("/circles")
+async def create_circle(
+    circle_req: CreateCircleRequest,
+    user_id: str = Depends(get_current_user)
+):
+    """Create a dream circle (premium only)"""
+    # Check if user is premium
+    user = await db.users.find_one({"id": user_id}, {"_id": 0})
+    if not user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if not user.get("is_premium", False):
+        raise HTTPException(
+            status_code=403,
+            detail="Creating circles is a premium feature. Upgrade to Premium!"
+        )
+    
+    # Create circle
+    circle_id = str(uuid.uuid4())
+    circle_doc = {
+        "id": circle_id,
+        "name": circle_req.name,
+        "description": circle_req.description,
+        "creator_id": user_id,
+        "creator_name": user.get("name", "Unknown"),
+        "member_ids": [user_id],
+        "member_count": 1,
+        "is_private": circle_req.is_private,
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.circles.insert_one(circle_doc)
+    return circle_doc
+
+@api_router.post("/circles/{circle_id}/join")
+async def join_circle(circle_id: str, user_id: str = Depends(get_current_user)):
+    """Join or leave a dream circle"""
+    circle = await db.circles.find_one({"id": circle_id}, {"_id": 0})
+    if not circle:
+        raise HTTPException(status_code=404, detail="Circle not found")
+    
+    member_ids = circle.get("member_ids", [])
+    
+    if user_id in member_ids:
+        # Leave circle
+        await db.circles.update_one(
+            {"id": circle_id},
+            {
+                "$pull": {"member_ids": user_id},
+                "$inc": {"member_count": -1}
+            }
+        )
+        return {"message": "Left circle", "joined": False}
+    else:
+        # Check circle limit for free users
+        user = await db.users.find_one({"id": user_id}, {"_id": 0})
+        if not user.get("is_premium", False):
+            # Count user's circles
+            user_circles = await db.circles.count_documents({"member_ids": user_id})
+            if user_circles >= 3:
+                raise HTTPException(
+                    status_code=403,
+                    detail="Circle limit reached (3 max). Upgrade to Premium for unlimited circles!"
+                )
+        
+        # Join circle
+        await db.circles.update_one(
+            {"id": circle_id},
+            {
+                "$push": {"member_ids": user_id},
+                "$inc": {"member_count": 1}
+            }
+        )
+        return {"message": "Joined circle", "joined": True}
+
 # Payment Routes
 PREMIUM_PACKAGES = {
     "monthly": {"amount": 9.99, "name": "Premium Monthly", "description": "AI dream analysis for 30 days"},
