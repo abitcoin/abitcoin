@@ -152,7 +152,7 @@ export default function LandingPage() {
               <span className="font-heading text-void">DreamWise</span>
             </div>
             <p className="text-sm text-void/60 font-body">
-              © 2025 DreamWise. All dreams reserved.
+              {t('footer.copyright')}
             </p>
           </div>
         </div>
