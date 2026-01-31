@@ -1,8 +1,10 @@
 import { useState } from "react";
+import { useTranslation } from "react-i18next";
 import { Moon, Sparkles } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
+import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
 
@@ -10,6 +12,7 @@ const BACKEND_URL = process.env.REACT_APP_BACKEND_URL;
 const API = `${BACKEND_URL}/api`;
 
 export default function AuthPage({ onLogin }) {
+  const { t } = useTranslation();
   const [isLogin, setIsLogin] = useState(true);
   const [loading, setLoading] = useState(false);
   const [formData, setFormData] = useState({
@@ -30,9 +33,9 @@ export default function AuthPage({ onLogin }) {
 
       const response = await axios.post(endpoint, payload);
       onLogin(response.data.token, response.data.user);
-      toast.success(isLogin ? "Welcome back!" : "Account created successfully!");
+      toast.success(t('toast.welcomeBack'));
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Authentication failed");
+      toast.error(error.response?.data?.detail || t('toast.invalidCredentials'));
     } finally {
       setLoading(false);
     }
@@ -51,6 +54,11 @@ export default function AuthPage({ onLogin }) {
         }}
       />
       
+      {/* Language Selector */}
+      <div className="absolute top-4 right-4 z-20">
+        <LanguageSelector variant="minimal" />
+      </div>
+      
       {/* Content */}
       <div className="relative z-10 min-h-screen flex items-center justify-center px-4 py-12">
         <div className="w-full max-w-md">
@@ -62,10 +70,10 @@ export default function AuthPage({ onLogin }) {
                 <Sparkles className="w-6 h-6 text-lucid" />
               </div>
               <h1 className="text-3xl font-heading font-light text-white tracking-tight">
-                {isLogin ? "Welcome Back" : "Begin Your Journey"}
+                {isLogin ? t('auth.welcomeBack') : t('auth.createAccount')}
               </h1>
               <p className="text-white/80 mt-2 font-body">
-                {isLogin ? "Enter the realm of dreams" : "Start tracking your dreams"}
+                {isLogin ? t('auth.enterRealm') : t('auth.joinDreamers')}
               </p>
             </div>
 
@@ -73,11 +81,11 @@ export default function AuthPage({ onLogin }) {
             <form onSubmit={handleSubmit} className="space-y-4" data-testid="auth-form">
               {!isLogin && (
                 <div>
-                  <Label htmlFor="name" className="text-white font-body">Name</Label>
+                  <Label htmlFor="name" className="text-white font-body">{t('auth.name')}</Label>
                   <Input
                     id="name"
                     type="text"
-                    placeholder="Your name"
+                    placeholder={t('auth.name')}
                     value={formData.name}
                     onChange={(e) => setFormData({...formData, name: e.target.value})}
                     className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl h-12 mt-1"
@@ -88,7 +96,7 @@ export default function AuthPage({ onLogin }) {
               )}
               
               <div>
-                <Label htmlFor="email" className="text-white font-body">Email</Label>
+                <Label htmlFor="email" className="text-white font-body">{t('auth.email')}</Label>
                 <Input
                   id="email"
                   type="email"
@@ -102,7 +110,7 @@ export default function AuthPage({ onLogin }) {
               </div>
               
               <div>
-                <Label htmlFor="password" className="text-white font-body">Password</Label>
+                <Label htmlFor="password" className="text-white font-body">{t('auth.password')}</Label>
                 <Input
                   id="password"
                   type="password"
@@ -121,7 +129,7 @@ export default function AuthPage({ onLogin }) {
                 className="w-full bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95 mt-6"
                 data-testid="submit-button"
               >
-                {loading ? "Please wait..." : (isLogin ? "Sign In" : "Create Account")}
+                {loading ? t('common.loading') : (isLogin ? t('auth.signIn') : t('auth.signUp'))}
               </Button>
             </form>
 
@@ -133,7 +141,10 @@ export default function AuthPage({ onLogin }) {
                 className="text-white/90 hover:text-white font-body text-sm transition-colors"
                 data-testid="toggle-auth-button"
               >
-                {isLogin ? "Don't have an account? Sign up" : "Already have an account? Sign in"}
+                {isLogin 
+                  ? `${t('auth.noAccount')} ${t('auth.signUpLink')}`
+                  : `${t('auth.haveAccount')} ${t('auth.signInLink')}`
+                }
               </button>
             </div>
           </div>
