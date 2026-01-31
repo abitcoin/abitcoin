@@ -128,19 +128,11 @@ export default function DreamCircles({ user, onLogout }) {
                 </Button>
                 <Button
                   variant="ghost"
-                  onClick={() => navigate('/community')}
-                  className="font-body text-void hover:text-void/80"
-                  data-testid="nav-community"
-                >
-                  Feed
-                </Button>
-                <Button
-                  variant="ghost"
-                  onClick={() => navigate('/circles')}
+                  onClick={() => navigate('/community-hub')}
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
-                  data-testid="nav-circles"
+                  data-testid="nav-community-hub"
                 >
-                  Circles
+                  Community
                 </Button>
                 {!user?.is_premium && (
                   <Button
