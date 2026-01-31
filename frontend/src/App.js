@@ -50,6 +50,7 @@ function App() {
           <Route path="/dreams/:id" element={token ? <DreamDetail user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/premium" element={token ? <PremiumPage user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/payment-success" element={token ? <PaymentSuccess /> : <Navigate to="/auth" />} />
+          <Route path="/community" element={token ? <CommunityFeed user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
