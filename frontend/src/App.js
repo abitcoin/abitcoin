@@ -9,6 +9,7 @@ import DreamsLibrary from "@/pages/DreamsLibrary";
 import DreamDetail from "@/pages/DreamDetail";
 import PremiumPage from "@/pages/PremiumPage";
 import PaymentSuccess from "@/pages/PaymentSuccess";
+import CommunityFeed from "@/pages/CommunityFeed";
 import "@/App.css";
 
 function App() {
