@@ -131,19 +131,19 @@ Build a dream-tracking application with the following features:
 ### P0 (Critical)
 - [x] Community Hub page (COMPLETED)
 - [x] Multi-language UI (COMPLETED)
+- [x] Direct Messaging (COMPLETED)
+- [x] Collaborative Dream Interpretation (COMPLETED)
+- [x] Google Analytics Configuration (COMPLETED - needs user's GA ID)
 
 ### P1 (High Priority)
-- [ ] Apply translations to remaining pages (DreamsLibrary, DreamDetail, DreamJournal, etc.)
 - [ ] User profiles with dream statistics
 - [ ] Test social platform freemium limits
 
-### P2 (Medium Priority)
-- [ ] Direct messaging between users
-- [ ] Collaborative dream interpretation in Circles
+### P2 (Medium Priority)  
+- [ ] Add translations to DreamDetail page
 
 ### P3 (Low Priority)
 - [ ] Refactor social routes into separate file
-- [ ] Add Google Analytics measurement ID
 
 ## Known Issues
 - **Deployment Pipeline**: Live site may not update immediately after redeploy (platform issue, not code)
