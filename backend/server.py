@@ -344,6 +344,16 @@ async def get_me(user_id: str = Depends(get_current_user)):
         created_at=datetime.fromisoformat(user_doc["created_at"])
     )
 
+# Forgot Password (placeholder - always returns success for security)
+class ForgotPasswordRequest(BaseModel):
+    email: EmailStr
+
+@api_router.post("/auth/forgot-password")
+async def forgot_password(request: ForgotPasswordRequest):
+    # For security, always return success (don't reveal if email exists)
+    # In production, this would send an email with reset link
+    return {"message": "If an account exists with this email, you will receive a password reset link."}
+
 # Dream Routes
 @api_router.post("/dreams", response_model=Dream)
 async def create_dream(dream_data: DreamCreate, user_id: str = Depends(get_current_user)):
