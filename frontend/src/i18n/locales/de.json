@@ -30,7 +30,12 @@
     "noAccount": "Kein Konto?",
     "haveAccount": "Bereits ein Konto?",
     "signUpLink": "Registrieren",
-    "signInLink": "Anmelden"
+    "signInLink": "Anmelden",
+    "forgotPassword": "Passwort vergessen?",
+    "resetPassword": "Passwort zurücksetzen",
+    "resetEmailSent": "Wenn ein Konto mit dieser E-Mail existiert, erhalten Sie einen Link zum Zurücksetzen.",
+    "backToLogin": "Zurück zur Anmeldung",
+    "enterEmail": "Geben Sie Ihre E-Mail-Adresse ein"
   },
   "dashboard": {
     "welcomeBack": "Willkommen zurück,",
