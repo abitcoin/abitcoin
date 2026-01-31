@@ -47,7 +47,7 @@ export default function DreamCircles({ user, onLogout }) {
     e.preventDefault();
     
     if (!user?.is_premium) {
-      toast.error("Creating circles is a premium feature");
+      toast.error(t('dreamDetail.premiumFeature'));
       setTimeout(() => navigate('/premium'), 1500);
       return;
     }
@@ -63,9 +63,9 @@ export default function DreamCircles({ user, onLogout }) {
       setCircles([response.data, ...circles]);
       setShowCreateModal(false);
       setFormData({ name: "", description: "", is_private: false });
-      toast.success("Circle created!");
+      toast.success(t('toast.circleCreated'));
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to create circle");
+      toast.error(error.response?.data?.detail || t('common.error'));
     }
   };
 
@@ -93,7 +93,7 @@ export default function DreamCircles({ user, onLogout }) {
       
       toast.success(response.data.message);
     } catch (error) {
-      toast.error(error.response?.data?.detail || "Failed to join circle");
+      toast.error(error.response?.data?.detail || t('common.error'));
     }
   };
 
@@ -119,7 +119,7 @@ export default function DreamCircles({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dashboard"
                 >
-                  Dashboard
+                  {t('nav.dashboard')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -127,7 +127,7 @@ export default function DreamCircles({ user, onLogout }) {
                   className="font-body text-void hover:text-void/80"
                   data-testid="nav-dreams"
                 >
-                  My Dreams
+                  {t('nav.myDreams')}
                 </Button>
                 <Button
                   variant="ghost"
@@ -135,7 +135,7 @@ export default function DreamCircles({ user, onLogout }) {
                   className="font-body text-lucid hover:text-lucid/80 font-medium"
                   data-testid="nav-community-hub"
                 >
-                  Community
+                  {t('nav.community')}
                 </Button>
                 {!user?.is_premium && (
                   <Button
@@ -144,19 +144,20 @@ export default function DreamCircles({ user, onLogout }) {
                     className="font-body text-lucid hover:text-lucid/80 font-medium"
                     data-testid="nav-premium"
                   >
-                    ✨ Premium
+                    ✨ {t('nav.premium')}
                   </Button>
                 )}
               </div>
             </div>
             <div className="flex items-center gap-4">
+              <LanguageSelector variant="minimal" />
               <Button
                 onClick={() => navigate('/journal')}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium transition-all duration-300 hover:scale-105 active:scale-95"
                 data-testid="new-dream-button"
               >
                 <PlusCircle className="w-4 h-4 mr-2" />
-                New Dream
+                {t('nav.newDream')}
               </Button>
               <Button
                 variant="ghost"
@@ -176,10 +177,10 @@ export default function DreamCircles({ user, onLogout }) {
         <div className="flex items-center justify-between mb-8">
           <div>
             <h1 className="text-4xl sm:text-5xl font-heading font-light text-void tracking-tight mb-2">
-              Dream <span className="italic">Circles</span>
+              {t('circles.title')} <span className="italic">{t('circles.titleItalic')}</span>
             </h1>
             <p className="text-lg text-void/70 font-body tracking-wide">
-              Join communities of dreamers with shared interests
+              {t('circles.subtitle')}
             </p>
           </div>
           
@@ -190,32 +191,32 @@ export default function DreamCircles({ user, onLogout }) {
               data-testid="create-circle-button"
             >
               <PlusCircle className="w-4 h-4 mr-2" />
-              Create Circle
+              {t('circles.createCircle')}
             </Button>
           )}
         </div>
 
         {loading ? (
           <div className="text-center py-12">
-            <p className="text-void/60 font-body">Loading circles...</p>
+            <p className="text-void/60 font-body">{t('circles.loading')}</p>
           </div>
         ) : circles.length === 0 ? (
           <div className="glass-effect rounded-3xl p-12 text-center">
             <Users className="w-16 h-16 text-void/30 mx-auto mb-4" />
-            <p className="text-void/60 font-body mb-4">No circles yet</p>
+            <p className="text-void/60 font-body mb-4">{t('circles.noCircles')}</p>
             {user?.is_premium ? (
               <Button
                 onClick={() => setShowCreateModal(true)}
                 className="bg-void text-white hover:bg-void/90 rounded-full font-body"
               >
-                Create First Circle
+                {t('circles.createFirst')}
               </Button>
             ) : (
               <Button
                 onClick={() => navigate('/premium')}
                 className="bg-lucid text-void hover:bg-lucid/90 rounded-full font-body"
               >
-                Upgrade to Create Circles
+                {t('circles.upgradeToCreate')}
               </Button>
             )}
           </div>
@@ -243,7 +244,7 @@ export default function DreamCircles({ user, onLogout }) {
 
                 <div className="flex items-center justify-between pt-4 border-t border-white/30">
                   <div className="text-sm text-void/60 font-body">
-                    {circle.member_count} {circle.member_count === 1 ? 'member' : 'members'}
+                    {circle.member_count} {circle.member_count === 1 ? t('circles.member') : t('circles.members')}
                   </div>
                   
                   <Button
@@ -255,13 +256,13 @@ export default function DreamCircles({ user, onLogout }) {
                     }`}
                     data-testid={`join-circle-${circle.id}`}
                   >
-                    {isMember(circle) ? 'Leave' : 'Join'}
+                    {isMember(circle) ? t('circles.leave') : t('circles.join')}
                   </Button>
                 </div>
 
                 {circle.creator_name && (
                   <div className="text-xs text-void/50 font-body mt-2">
-                    Created by {circle.creator_name}
+                    {t('circles.createdBy')} {circle.creator_name}
                   </div>
                 )}
               </div>
@@ -272,16 +273,16 @@ export default function DreamCircles({ user, onLogout }) {
         {!user?.is_premium && circles.length > 0 && (
           <div className="glass-effect rounded-3xl p-8 mt-8 text-center">
             <h3 className="text-2xl font-heading font-light text-void mb-2">
-              Want to create your own circle?
+              {t('circles.wantToCreate')}
             </h3>
             <p className="text-void/70 font-body mb-4">
-              Upgrade to Premium to create unlimited dream circles
+              {t('circles.upgradeDescription')}
             </p>
             <Button
               onClick={() => navigate('/premium')}
               className="bg-lucid text-void hover:bg-lucid/90 rounded-full font-body font-medium"
             >
-              Upgrade to Premium
+              {t('dashboard.upgradePremium')}
             </Button>
           </div>
         )}
@@ -291,15 +292,15 @@ export default function DreamCircles({ user, onLogout }) {
       {showCreateModal && (
         <div className="fixed inset-0 bg-void/50 backdrop-blur-sm z-50 flex items-center justify-center p-4" onClick={() => setShowCreateModal(false)}>
           <div className="glass-effect rounded-3xl p-8 max-w-md w-full" onClick={(e) => e.stopPropagation()} data-testid="create-circle-modal">
-            <h2 className="text-2xl font-heading font-light text-void mb-6">Create Dream Circle</h2>
+            <h2 className="text-2xl font-heading font-light text-void mb-6">{t('circles.createModal.title')}</h2>
             
             <form onSubmit={handleCreateCircle} className="space-y-4">
               <div>
-                <Label htmlFor="name" className="text-void font-body">Circle Name</Label>
+                <Label htmlFor="name" className="text-void font-body">{t('circles.createModal.name')}</Label>
                 <Input
                   id="name"
                   type="text"
-                  placeholder="Lucid Dreamers"
+                  placeholder={t('circles.createModal.namePlaceholder')}
                   value={formData.name}
                   onChange={(e) => setFormData({...formData, name: e.target.value})}
                   className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl h-12 mt-1"
@@ -309,10 +310,10 @@ export default function DreamCircles({ user, onLogout }) {
               </div>
 
               <div>
-                <Label htmlFor="description" className="text-void font-body">Description</Label>
+                <Label htmlFor="description" className="text-void font-body">{t('circles.createModal.description')}</Label>
                 <Textarea
                   id="description"
-                  placeholder="A community for exploring lucid dreaming techniques..."
+                  placeholder={t('circles.createModal.descriptionPlaceholder')}
                   value={formData.description}
                   onChange={(e) => setFormData({...formData, description: e.target.value})}
                   className="bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl mt-1"
@@ -331,7 +332,7 @@ export default function DreamCircles({ user, onLogout }) {
                       : 'bg-white/30 text-void/70 hover:bg-white/50'
                   }`}
                 >
-                  🌍 Public
+                  🌍 {t('circles.createModal.public')}
                 </button>
                 <button
                   type="button"
@@ -342,7 +343,7 @@ export default function DreamCircles({ user, onLogout }) {
                       : 'bg-white/30 text-void/70 hover:bg-white/50'
                   }`}
                 >
-                  🔒 Private
+                  🔒 {t('circles.createModal.private')}
                 </button>
               </div>
 
@@ -352,7 +353,7 @@ export default function DreamCircles({ user, onLogout }) {
                   className="flex-1 bg-void text-white hover:bg-void/90 rounded-full h-12 font-body font-medium"
                   data-testid="submit-circle-button"
                 >
-                  Create Circle
+                  {t('circles.createModal.create')}
                 </Button>
                 <Button
                   type="button"
@@ -361,7 +362,7 @@ export default function DreamCircles({ user, onLogout }) {
                   className="flex-1 bg-white/50 text-void border-void/10 hover:bg-white/80 rounded-full h-12 font-body font-medium"
                   data-testid="cancel-circle-button"
                 >
-                  Cancel
+                  {t('circles.createModal.cancel')}
                 </Button>
               </div>
             </form>
