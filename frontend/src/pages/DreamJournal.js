@@ -31,7 +31,8 @@ export default function DreamJournal({ user, onLogout }) {
     title: "",
     content: "",
     date: new Date().toISOString().split('T')[0],
-    tags: []
+    tags: [],
+    is_public: false
   });
 
   const toggleTag = (tag) => {
