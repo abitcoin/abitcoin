@@ -94,6 +94,9 @@ Build a dream-tracking application with the following features:
 - Direct messaging system with user search and conversations
 - Collaborative interpretation feature for Dream Circles
 - Google Analytics configuration (environment variable ready)
+- **Bug Fix**: AI Artwork generation download now working correctly
+  - Fixed file extension mismatch (now uses correct .jpg/.png based on mime type)
+  - Fixed download link creation for cross-browser compatibility
 
 ## Architecture
 
