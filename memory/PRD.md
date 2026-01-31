@@ -147,7 +147,7 @@ Build a dream-tracking application with the following features:
 
 ## Known Issues
 - **Deployment Pipeline**: Live site may not update immediately after redeploy (platform issue, not code)
-- Use preview environment for testing: https://dreamscape-66.preview.emergentagent.com
+- Use preview environment for testing: https://slumbervision.preview.emergentagent.com
 
 ## Test Credentials
 - Email: `testhub@dreamwise.com`
