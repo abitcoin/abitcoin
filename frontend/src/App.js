@@ -10,6 +10,7 @@ import DreamDetail from "@/pages/DreamDetail";
 import PremiumPage from "@/pages/PremiumPage";
 import PaymentSuccess from "@/pages/PaymentSuccess";
 import CommunityFeed from "@/pages/CommunityFeed";
+import DreamCircles from "@/pages/DreamCircles";
 import "@/App.css";
 
 function App() {
