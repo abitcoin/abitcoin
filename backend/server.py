@@ -70,6 +70,7 @@ class DreamCreate(BaseModel):
     content: str
     date: datetime
     tags: List[str] = []
+    is_public: bool = False
 
 class DreamUpdate(BaseModel):
     title: Optional[str] = None
