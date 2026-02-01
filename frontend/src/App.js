@@ -14,6 +14,7 @@ import DreamCircles from "@/pages/DreamCircles";
 import CommunityHub from "@/pages/CommunityHub";
 import Messages from "@/pages/Messages";
 import CircleDetail from "@/pages/CircleDetail";
+import ResetPassword from "@/pages/ResetPassword";
 import "@/App.css";
 
 function App() {
