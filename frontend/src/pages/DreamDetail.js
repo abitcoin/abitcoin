@@ -269,35 +269,51 @@ export default function DreamDetail({ user, onLogout }) {
   };
 
   const handleDownloadCard = () => {
-    const canvas = generateCardImage();
-    const link = document.createElement('a');
-    link.download = `dreamwise-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
-    link.href = canvas.toDataURL('image/png');
-    link.click();
-    toast.success("Card downloaded!");
+    try {
+      const canvas = generateCardImage();
+      const link = document.createElement('a');
+      link.download = `dreamwise-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.png`;
+      link.href = canvas.toDataURL('image/png');
+      
+      // Append to body, click, then remove (required for some browsers)
+      document.body.appendChild(link);
+      link.click();
+      document.body.removeChild(link);
+      
+      toast.success("Card downloaded!");
+    } catch (error) {
+      console.error("Card generation error:", error);
+      toast.error("Failed to generate card. Please try again.");
+    }
   };
 
   const handleShareCard = async () => {
-    const canvas = generateCardImage();
-    
-    canvas.toBlob(async (blob) => {
-      const file = new File([blob], 'dream-card.png', { type: 'image/png' });
+    try {
+      const canvas = generateCardImage();
       
-      if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
-        try {
-          await navigator.share({
-            files: [file],
-            title: dream.title,
-            text: `Check out my dream: ${dream.title}`
-          });
-          toast.success("Shared successfully!");
-        } catch (error) {
-          if (error.name !== 'AbortError') {
-            handleDownloadCard();
-          }
+      canvas.toBlob(async (blob) => {
+        if (!blob) {
+          toast.error("Failed to generate card image");
+          return;
         }
-      } else {
-        handleDownloadCard();
+        
+        const file = new File([blob], 'dream-card.png', { type: 'image/png' });
+        
+        if (navigator.share && navigator.canShare && navigator.canShare({ files: [file] })) {
+          try {
+            await navigator.share({
+              files: [file],
+              title: dream.title,
+              text: `Check out my dream: ${dream.title}`
+            });
+            toast.success("Shared successfully!");
+          } catch (error) {
+            if (error.name !== 'AbortError') {
+              handleDownloadCard();
+            }
+          }
+        } else {
+          handleDownloadCard();
       }
     });
   };
