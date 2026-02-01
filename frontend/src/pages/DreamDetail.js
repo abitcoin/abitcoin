@@ -314,8 +314,12 @@ export default function DreamDetail({ user, onLogout }) {
           }
         } else {
           handleDownloadCard();
-      }
-    });
+        }
+      }, 'image/png');
+    } catch (error) {
+      console.error("Share card error:", error);
+      toast.error("Failed to share card. Please try again.");
+    }
   };
 
   const handleGenerateArtwork = async () => {
