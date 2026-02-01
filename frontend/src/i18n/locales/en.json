@@ -99,7 +99,14 @@
     "makePublic": "Share with community",
     "publicDescription": "Allow other dreamers to see this dream",
     "saveDream": "Save Dream",
-    "saving": "Saving..."
+    "saving": "Saving...",
+    "startRecording": "Start voice recording",
+    "stopRecording": "Stop recording",
+    "listening": "Listening... Speak your dream",
+    "recordingStarted": "Listening... Speak your dream",
+    "recordingStopped": "Recording stopped",
+    "speechNotSupported": "Speech recognition not supported in this browser",
+    "microphoneNotAllowed": "Microphone access denied. Please allow in browser settings."
   },
   "dreams": {
     "title": "Dream Library",
