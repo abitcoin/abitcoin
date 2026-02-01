@@ -1099,7 +1099,7 @@ async def share_dream_to_circle(circle_id: str, request: ShareDreamToCircleReque
         raise HTTPException(status_code=403, detail="You must be a member of this circle to share dreams")
     
     # Get the dream
-    dream = await db.dreams.find_one({"id": request.dream_id, "owner_id": user_id}, {"_id": 0})
+    dream = await db.dreams.find_one({"id": request.dream_id, "user_id": user_id}, {"_id": 0})
     if not dream:
         raise HTTPException(status_code=404, detail="Dream not found")
     
