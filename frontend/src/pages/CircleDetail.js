@@ -1,9 +1,10 @@
 import { useEffect, useState } from "react";
 import { useNavigate, useParams } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Moon, LogOut, PlusCircle, ArrowLeft, Users, MessageCircle, Send, User } from "lucide-react";
+import { Moon, LogOut, PlusCircle, ArrowLeft, Users, MessageCircle, Send, User, UserPlus, Lock } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Textarea } from "@/components/ui/textarea";
+import { Input } from "@/components/ui/input";
 import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
 import { toast } from "sonner";
@@ -24,6 +25,8 @@ export default function CircleDetail({ user, onLogout }) {
   const [selectedDreamId, setSelectedDreamId] = useState("");
   const [interpretationText, setInterpretationText] = useState({});
   const [expandedDream, setExpandedDream] = useState(null);
+  const [inviteEmail, setInviteEmail] = useState("");
+  const [inviting, setInviting] = useState(false);
 
   useEffect(() => {
     fetchCircleData();
