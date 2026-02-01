@@ -287,7 +287,7 @@ async def signup(user_data: UserSignup):
     user_doc = {
         "id": user_id,
         "email": user_data.email,
-        "password": hash_password(user_data.password),
+        "hashed_password": hash_password(user_data.password),
         "name": user_data.name,
         "is_premium": False,
         "ai_analysis_count": 0,
