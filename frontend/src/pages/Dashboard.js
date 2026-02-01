@@ -1,7 +1,7 @@
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Moon, LogOut, PlusCircle, BookOpen, TrendingUp, Calendar } from "lucide-react";
+import { Moon, LogOut, PlusCircle, BookOpen, TrendingUp, Calendar, Mail, Check, X } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import LanguageSelector from "@/components/LanguageSelector";
 import axios from "axios";
@@ -15,9 +15,11 @@ export default function Dashboard({ user, onLogout }) {
   const { t } = useTranslation();
   const [stats, setStats] = useState(null);
   const [loading, setLoading] = useState(true);
+  const [invites, setInvites] = useState([]);
 
   useEffect(() => {
     fetchStats();
+    fetchInvites();
   }, []);
 
   const fetchStats = async () => {
@@ -31,6 +33,33 @@ export default function Dashboard({ user, onLogout }) {
       toast.error("Failed to load statistics");
     } finally {
       setLoading(false);
+    }
+  };
+
+  const fetchInvites = async () => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.get(`${API}/circles/invites/my`, {
+        headers: { Authorization: `Bearer ${token}` }
+      });
+      setInvites(response.data);
+    } catch (error) {
+      console.error("Failed to fetch invites:", error);
+    }
+  };
+
+  const handleInviteResponse = async (inviteId, accept) => {
+    try {
+      const token = localStorage.getItem('token');
+      const response = await axios.post(
+        `${API}/circles/invites/${inviteId}/respond?accept=${accept}`,
+        {},
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      toast.success(response.data.message);
+      setInvites(invites.filter(inv => inv.id !== inviteId));
+    } catch (error) {
+      toast.error(error.response?.data?.detail || t('common.error'));
     }
   };
 
