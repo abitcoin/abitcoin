@@ -380,7 +380,7 @@ async def forgot_password(request: ForgotPasswordRequest):
             reset_link = f"https://dreamwise.fi/reset-password?token={reset_token}"
             
             resend.Emails.send({
-                "from": "DreamWise <noreply@dreamwise.fi>",
+                "from": "DreamWise <onboarding@resend.dev>",
                 "to": [request.email],
                 "subject": "Reset Your DreamWise Password",
                 "html": f"""
