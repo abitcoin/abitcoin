@@ -132,6 +132,9 @@ class CreateCircleRequest(BaseModel):
     description: str
     is_private: bool = False
 
+class CircleInviteRequest(BaseModel):
+    email_or_username: str
+
 class AIAnalysisRequest(BaseModel):
     dream_id: str
 
