@@ -215,6 +215,16 @@
     "alreadyPremium": "Olet Premium!",
     "enjoyFeatures": "Nauti kaikista premium-ominaisuuksista"
   },
+  "resetPassword": {
+    "title": "Nollaa salasana",
+    "subtitle": "Syötä uusi salasanasi",
+    "newPassword": "Uusi salasana",
+    "confirmPassword": "Vahvista salasana",
+    "submit": "Nollaa salasana",
+    "success": "Salasana nollattu onnistuneesti! Kirjaudu sisään.",
+    "passwordsNotMatch": "Salasanat eivät täsmää",
+    "passwordTooShort": "Salasanan täytyy olla vähintään 6 merkkiä"
+  },
   "common": {
     "loading": "Ladataan...",
     "error": "Tapahtui virhe",
