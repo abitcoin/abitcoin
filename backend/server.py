@@ -321,7 +321,12 @@ async def signup(user_data: UserSignup):
 @api_router.post("/auth/login", response_model=TokenResponse)
 async def login(login_data: UserLogin):
     user_doc = await db.users.find_one({"email": login_data.email}, {"_id": 0})
-    if not user_doc or not verify_password(login_data.password, user_doc.get("hashed_password", "")):
+    if not user_doc:
+        raise HTTPException(status_code=401, detail="Invalid credentials")
+    
+    # Support both old "password" field and new "hashed_password" field
+    stored_password = user_doc.get("hashed_password") or user_doc.get("password", "")
+    if not verify_password(login_data.password, stored_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
     user = User(
