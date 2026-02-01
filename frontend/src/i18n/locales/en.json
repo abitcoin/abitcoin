@@ -225,6 +225,16 @@
     "alreadyPremium": "You're Premium!",
     "enjoyFeatures": "Enjoy all premium features"
   },
+  "resetPassword": {
+    "title": "Reset Password",
+    "subtitle": "Enter your new password",
+    "newPassword": "New Password",
+    "confirmPassword": "Confirm Password",
+    "submit": "Reset Password",
+    "success": "Password reset successfully! Please log in.",
+    "passwordsNotMatch": "Passwords do not match",
+    "passwordTooShort": "Password must be at least 6 characters"
+  },
   "common": {
     "loading": "Loading...",
     "error": "An error occurred",
