@@ -49,6 +49,7 @@ function App() {
         <Routes>
           <Route path="/" element={token ? <Navigate to="/dashboard" /> : <LandingPage />} />
           <Route path="/auth" element={token ? <Navigate to="/dashboard" /> : <AuthPage onLogin={handleLogin} />} />
+          <Route path="/reset-password" element={<ResetPassword />} />
           <Route path="/dashboard" element={token ? <Dashboard user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/journal" element={token ? <DreamJournal user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/dreams" element={token ? <DreamsLibrary user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
