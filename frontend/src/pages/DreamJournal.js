@@ -1,7 +1,7 @@
-import { useState } from "react";
+import { useState, useRef, useEffect } from "react";
 import { useNavigate } from "react-router-dom";
 import { useTranslation } from "react-i18next";
-import { Moon, LogOut, Save, X } from "lucide-react";
+import { Moon, LogOut, Save, X, Mic, MicOff } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
@@ -28,8 +28,10 @@ const TAG_OPTIONS = [
 
 export default function DreamJournal({ user, onLogout }) {
   const navigate = useNavigate();
-  const { t } = useTranslation();
+  const { t, i18n } = useTranslation();
   const [loading, setLoading] = useState(false);
+  const [isListening, setIsListening] = useState(false);
+  const recognitionRef = useRef(null);
   const [formData, setFormData] = useState({
     title: "",
     content: "",
@@ -37,6 +39,74 @@ export default function DreamJournal({ user, onLogout }) {
     tags: [],
     is_public: false
   });
+
+  // Speech Recognition Setup
+  useEffect(() => {
+    if ('webkitSpeechRecognition' in window || 'SpeechRecognition' in window) {
+      const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+      recognitionRef.current = new SpeechRecognition();
+      recognitionRef.current.continuous = true;
+      recognitionRef.current.interimResults = true;
+      
+      // Set language based on current UI language
+      const langMap = {
+        'fi': 'fi-FI',
+        'en': 'en-US',
+        'fr': 'fr-FR',
+        'de': 'de-DE',
+        'es': 'es-ES'
+      };
+      recognitionRef.current.lang = langMap[i18n.language] || 'en-US';
+
+      recognitionRef.current.onresult = (event) => {
+        let transcript = '';
+        for (let i = event.resultIndex; i < event.results.length; i++) {
+          transcript += event.results[i][0].transcript;
+        }
+        setFormData(prev => ({
+          ...prev,
+          content: prev.content + transcript
+        }));
+      };
+
+      recognitionRef.current.onerror = (event) => {
+        console.error('Speech recognition error:', event.error);
+        setIsListening(false);
+        if (event.error === 'not-allowed') {
+          toast.error(t('journal.microphoneNotAllowed') || 'Microphone access denied');
+        }
+      };
+
+      recognitionRef.current.onend = () => {
+        if (isListening) {
+          recognitionRef.current.start();
+        }
+      };
+    }
+
+    return () => {
+      if (recognitionRef.current) {
+        recognitionRef.current.stop();
+      }
+    };
+  }, [i18n.language, isListening, t]);
+
+  const toggleListening = () => {
+    if (!recognitionRef.current) {
+      toast.error(t('journal.speechNotSupported') || 'Speech recognition not supported in this browser');
+      return;
+    }
+
+    if (isListening) {
+      recognitionRef.current.stop();
+      setIsListening(false);
+      toast.success(t('journal.recordingStopped') || 'Recording stopped');
+    } else {
+      recognitionRef.current.start();
+      setIsListening(true);
+      toast.info(t('journal.recordingStarted') || 'Listening... Speak your dream');
+    }
+  };
 
   const toggleTag = (tag) => {
     setFormData(prev => ({
