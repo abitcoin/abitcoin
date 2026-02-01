@@ -247,7 +247,28 @@ export default function DreamJournal({ user, onLogout }) {
 
           {/* Content */}
           <div className="mb-6">
-            <Label htmlFor="content" className="text-void font-body text-lg mb-2">{t('journal.dreamContent')}</Label>
+            <div className="flex items-center justify-between mb-2">
+              <Label htmlFor="content" className="text-void font-body text-lg">{t('journal.dreamContent')}</Label>
+              <Button
+                type="button"
+                onClick={toggleListening}
+                className={`rounded-full p-3 transition-all duration-300 ${
+                  isListening 
+                    ? 'bg-red-500 text-white animate-pulse hover:bg-red-600' 
+                    : 'bg-void/10 text-void hover:bg-void/20'
+                }`}
+                title={isListening ? (t('journal.stopRecording') || 'Stop recording') : (t('journal.startRecording') || 'Start voice recording')}
+                data-testid="voice-record-button"
+              >
+                {isListening ? <MicOff className="w-5 h-5" /> : <Mic className="w-5 h-5" />}
+              </Button>
+            </div>
+            {isListening && (
+              <div className="mb-2 flex items-center gap-2 text-red-500 font-body text-sm">
+                <span className="w-2 h-2 bg-red-500 rounded-full animate-pulse"></span>
+                {t('journal.listening') || 'Listening... Speak your dream'}
+              </div>
+            )}
             <Textarea
               id="content"
               placeholder={t('journal.dreamContentPlaceholder')}
