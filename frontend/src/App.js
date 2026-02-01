@@ -63,6 +63,7 @@ function App() {
           <Route path="/circles/:circleId" element={token ? <CircleDetail user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/messages" element={token ? <Messages user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
           <Route path="/messages/:recipientId" element={token ? <Messages user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
+          <Route path="/admin" element={token ? <AdminPage user={user} onLogout={handleLogout} /> : <Navigate to="/auth" />} />
         </Routes>
       </BrowserRouter>
       <Toaster />
