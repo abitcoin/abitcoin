@@ -201,7 +201,16 @@
       "private": "Private",
       "create": "Create Circle",
       "cancel": "Cancel"
-    }
+    },
+    "private": "Private",
+    "inviteUser": "Invite User",
+    "invitePlaceholder": "Email or username",
+    "sendInvite": "Send Invite",
+    "inviteSent": "Invitation sent!",
+    "pendingInvites": "Pending Invites",
+    "noInvites": "No invitations",
+    "accept": "Accept",
+    "decline": "Decline"
   },
   "premium": {
     "badge": "Unlock Your Full Potential",
