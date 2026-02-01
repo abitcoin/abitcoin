@@ -1090,6 +1090,104 @@ async def join_circle(circle_id: str, user_id: str = Depends(get_current_user)):
         )
         return {"message": "Joined circle", "joined": True}
 
+# Circle Invitation Routes
+@api_router.post("/circles/{circle_id}/invite")
+async def invite_to_circle(circle_id: str, request: CircleInviteRequest, user_id: str = Depends(get_current_user)):
+    """Invite a user to a private circle by email or username"""
+    # Check if circle exists and user is the creator
+    circle = await db.circles.find_one({"id": circle_id}, {"_id": 0})
+    if not circle:
+        raise HTTPException(status_code=404, detail="Circle not found")
+    
+    if circle["creator_id"] != user_id:
+        raise HTTPException(status_code=403, detail="Only the circle creator can invite users")
+    
+    # Find user by email or name
+    search_term = request.email_or_username.strip()
+    invited_user = await db.users.find_one(
+        {"$or": [
+            {"email": {"$regex": f"^{search_term}$", "$options": "i"}},
+            {"name": {"$regex": f"^{search_term}$", "$options": "i"}}
+        ]},
+        {"_id": 0, "id": 1, "name": 1, "email": 1}
+    )
+    
+    if not invited_user:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    if invited_user["id"] == user_id:
+        raise HTTPException(status_code=400, detail="You cannot invite yourself")
+    
+    if invited_user["id"] in circle.get("member_ids", []):
+        raise HTTPException(status_code=400, detail="User is already a member")
+    
+    # Check if invitation already exists
+    existing_invite = await db.circle_invites.find_one({
+        "circle_id": circle_id,
+        "invited_user_id": invited_user["id"],
+        "status": "pending"
+    })
+    if existing_invite:
+        raise HTTPException(status_code=400, detail="Invitation already sent")
+    
+    # Create invitation
+    invite_doc = {
+        "id": str(uuid.uuid4()),
+        "circle_id": circle_id,
+        "circle_name": circle["name"],
+        "invited_user_id": invited_user["id"],
+        "invited_by_id": user_id,
+        "invited_by_name": (await db.users.find_one({"id": user_id}, {"_id": 0, "name": 1}))["name"],
+        "status": "pending",
+        "created_at": datetime.now(timezone.utc).isoformat()
+    }
+    
+    await db.circle_invites.insert_one(invite_doc)
+    invite_doc.pop("_id", None)
+    
+    return {"message": f"Invitation sent to {invited_user['name']}", "invite": invite_doc}
+
+@api_router.get("/circles/invites/my")
+async def get_my_invites(user_id: str = Depends(get_current_user)):
+    """Get pending invitations for current user"""
+    invites = await db.circle_invites.find(
+        {"invited_user_id": user_id, "status": "pending"},
+        {"_id": 0}
+    ).to_list(50)
+    return invites
+
+@api_router.post("/circles/invites/{invite_id}/respond")
+async def respond_to_invite(invite_id: str, accept: bool, user_id: str = Depends(get_current_user)):
+    """Accept or decline a circle invitation"""
+    invite = await db.circle_invites.find_one({"id": invite_id, "invited_user_id": user_id}, {"_id": 0})
+    
+    if not invite:
+        raise HTTPException(status_code=404, detail="Invitation not found")
+    
+    if invite["status"] != "pending":
+        raise HTTPException(status_code=400, detail="Invitation already responded to")
+    
+    if accept:
+        # Add user to circle
+        await db.circles.update_one(
+            {"id": invite["circle_id"]},
+            {
+                "$push": {"member_ids": user_id},
+                "$inc": {"member_count": 1}
+            }
+        )
+        await db.circle_invites.update_one(
+            {"id": invite_id},
+            {"$set": {"status": "accepted"}}
+        )
+        return {"message": f"You joined {invite['circle_name']}!", "accepted": True}
+    else:
+        await db.circle_invites.update_one(
+            {"id": invite_id},
+            {"$set": {"status": "declined"}}
+        )
+        return {"message": "Invitation declined", "accepted": False}
+
 # Circle Collaborative Interpretation Routes
 @api_router.post("/circles/{circle_id}/dreams")
 async def share_dream_to_circle(circle_id: str, request: ShareDreamToCircleRequest, user_id: str = Depends(get_current_user)):
