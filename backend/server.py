@@ -329,11 +329,21 @@ async def login(login_data: UserLogin):
     if not verify_password(login_data.password, stored_password):
         raise HTTPException(status_code=401, detail="Invalid credentials")
     
+    # Owner account always has premium
+    is_premium = user_doc.get("is_premium", False)
+    if login_data.email == "annelelouarn1@outlook.com":
+        is_premium = True
+        # Also update in database
+        await db.users.update_one(
+            {"email": login_data.email},
+            {"$set": {"is_premium": True}}
+        )
+    
     user = User(
         id=user_doc["id"],
         email=user_doc["email"],
         name=user_doc["name"],
-        is_premium=user_doc.get("is_premium", False),
+        is_premium=is_premium,
         ai_analysis_count=user_doc.get("ai_analysis_count", 0),
         created_at=datetime.fromisoformat(user_doc["created_at"])
     )
