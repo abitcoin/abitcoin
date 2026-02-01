@@ -345,16 +345,28 @@ export default function DreamDetail({ user, onLogout }) {
         const mimeType = response.data.mime_type || 'image/png';
         const extension = mimeType.includes('jpeg') || mimeType.includes('jpg') ? 'jpg' : 'png';
         
-        // Create and download the artwork
-        const imageData = `data:${mimeType};base64,${response.data.image}`;
+        // Convert base64 to Blob for proper file type recognition
+        const byteCharacters = atob(response.data.image);
+        const byteNumbers = new Array(byteCharacters.length);
+        for (let i = 0; i < byteCharacters.length; i++) {
+          byteNumbers[i] = byteCharacters.charCodeAt(i);
+        }
+        const byteArray = new Uint8Array(byteNumbers);
+        const blob = new Blob([byteArray], { type: mimeType });
+        
+        // Create download link from Blob
+        const url = URL.createObjectURL(blob);
         const link = document.createElement('a');
         link.download = `dreamwise-artwork-${dream.title.replace(/[^a-z0-9]/gi, '-').toLowerCase()}.${extension}`;
-        link.href = imageData;
+        link.href = url;
         
-        // Append to body, click, then remove (required for some browsers)
+        // Append to body, click, then remove
         document.body.appendChild(link);
         link.click();
         document.body.removeChild(link);
+        
+        // Clean up the URL object
+        URL.revokeObjectURL(url);
         
         toast.success("AI Artwork generated and downloaded!");
       }
