@@ -1040,6 +1040,9 @@ async def create_circle(
     }
     
     await db.circles.insert_one(circle_doc)
+    
+    # Return without _id
+    circle_doc.pop("_id", None)
     return circle_doc
 
 @api_router.post("/circles/{circle_id}/join")
