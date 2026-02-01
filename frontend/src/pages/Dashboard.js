@@ -136,6 +136,49 @@ export default function Dashboard({ user, onLogout }) {
 
       {/* Main Content */}
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-12">
+        {/* Pending Invites */}
+        {invites.length > 0 && (
+          <div className="mb-8 glass-effect rounded-3xl p-6 border-2 border-lucid/30" data-testid="pending-invites">
+            <h3 className="text-lg font-heading text-void mb-4 flex items-center gap-2">
+              <Mail className="w-5 h-5 text-lucid" />
+              {t('circles.pendingInvites')} ({invites.length})
+            </h3>
+            <div className="space-y-3">
+              {invites.map(invite => (
+                <div key={invite.id} className="flex items-center justify-between bg-white/50 rounded-xl p-4">
+                  <div>
+                    <p className="font-body text-void font-medium">{invite.circle_name}</p>
+                    <p className="text-sm text-void/60 font-body">
+                      {t('circles.invitedBy') || 'Invited by'}: {invite.invited_by_name}
+                    </p>
+                  </div>
+                  <div className="flex gap-2">
+                    <Button
+                      onClick={() => handleInviteResponse(invite.id, true)}
+                      className="bg-lucid text-void hover:bg-lucid/90 rounded-full"
+                      size="sm"
+                      data-testid={`accept-invite-${invite.id}`}
+                    >
+                      <Check className="w-4 h-4 mr-1" />
+                      {t('circles.accept')}
+                    </Button>
+                    <Button
+                      onClick={() => handleInviteResponse(invite.id, false)}
+                      variant="outline"
+                      className="rounded-full border-void/20"
+                      size="sm"
+                      data-testid={`decline-invite-${invite.id}`}
+                    >
+                      <X className="w-4 h-4 mr-1" />
+                      {t('circles.decline')}
+                    </Button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+        )}
+
         {/* Welcome Section */}
         <div className="mb-12">
           <div className="flex items-center justify-between flex-wrap gap-4">
