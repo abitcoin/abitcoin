@@ -348,15 +348,93 @@ async def get_me(user_id: str = Depends(get_current_user)):
         created_at=datetime.fromisoformat(user_doc["created_at"])
     )
 
-# Forgot Password (placeholder - always returns success for security)
+# Forgot Password - sends reset email via Resend
 class ForgotPasswordRequest(BaseModel):
     email: EmailStr
 
+class ResetPasswordRequest(BaseModel):
+    token: str
+    new_password: str
+
 @api_router.post("/auth/forgot-password")
 async def forgot_password(request: ForgotPasswordRequest):
-    # For security, always return success (don't reveal if email exists)
-    # In production, this would send an email with reset link
+    # Check if user exists
+    user = await db.users.find_one({"email": request.email})
+    
+    if user:
+        # Generate reset token (valid for 1 hour)
+        reset_token = str(uuid.uuid4())
+        expires_at = datetime.now(timezone.utc) + timedelta(hours=1)
+        
+        # Store reset token in database
+        await db.password_resets.delete_many({"email": request.email})  # Remove old tokens
+        await db.password_resets.insert_one({
+            "email": request.email,
+            "token": reset_token,
+            "expires_at": expires_at.isoformat(),
+            "created_at": datetime.now(timezone.utc).isoformat()
+        })
+        
+        # Send email via Resend
+        try:
+            reset_link = f"https://dreamwise.fi/reset-password?token={reset_token}"
+            
+            resend.Emails.send({
+                "from": "DreamWise <noreply@dreamwise.fi>",
+                "to": [request.email],
+                "subject": "Reset Your DreamWise Password",
+                "html": f"""
+                <div style="font-family: Arial, sans-serif; max-width: 600px; margin: 0 auto; padding: 20px;">
+                    <h1 style="color: #1a1a2e;">DreamWise</h1>
+                    <h2>Password Reset Request</h2>
+                    <p>Hello,</p>
+                    <p>We received a request to reset your password. Click the button below to create a new password:</p>
+                    <p style="text-align: center; margin: 30px 0;">
+                        <a href="{reset_link}" style="background-color: #1a1a2e; color: white; padding: 12px 30px; text-decoration: none; border-radius: 25px; display: inline-block;">Reset Password</a>
+                    </p>
+                    <p>Or copy and paste this link into your browser:</p>
+                    <p style="color: #666; word-break: break-all;">{reset_link}</p>
+                    <p>This link will expire in 1 hour.</p>
+                    <p>If you didn't request this, you can safely ignore this email.</p>
+                    <hr style="border: none; border-top: 1px solid #eee; margin: 30px 0;">
+                    <p style="color: #999; font-size: 12px;">© 2025 DreamWise. All dreams reserved.</p>
+                </div>
+                """
+            })
+            logging.info(f"Password reset email sent to {request.email}")
+        except Exception as e:
+            logging.error(f"Failed to send reset email: {e}")
+    
+    # Always return success for security (don't reveal if email exists)
     return {"message": "If an account exists with this email, you will receive a password reset link."}
+
+@api_router.post("/auth/reset-password")
+async def reset_password(request: ResetPasswordRequest):
+    # Find valid reset token
+    reset_record = await db.password_resets.find_one({"token": request.token})
+    
+    if not reset_record:
+        raise HTTPException(status_code=400, detail="Invalid or expired reset token")
+    
+    # Check if token is expired
+    expires_at = datetime.fromisoformat(reset_record["expires_at"])
+    if datetime.now(timezone.utc) > expires_at:
+        await db.password_resets.delete_one({"token": request.token})
+        raise HTTPException(status_code=400, detail="Reset token has expired")
+    
+    # Hash new password
+    hashed_password = bcrypt.hashpw(request.new_password.encode('utf-8'), bcrypt.gensalt()).decode('utf-8')
+    
+    # Update user password
+    await db.users.update_one(
+        {"email": reset_record["email"]},
+        {"$set": {"hashed_password": hashed_password}}
+    )
+    
+    # Delete used token
+    await db.password_resets.delete_one({"token": request.token})
+    
+    return {"message": "Password has been reset successfully"}
 
 # Dream Routes
 @api_router.post("/dreams", response_model=Dream)
