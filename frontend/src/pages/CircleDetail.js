@@ -231,7 +231,12 @@ export default function CircleDetail({ user, onLogout }) {
                   <Users className="w-7 h-7 text-void" />
                 </div>
                 <div>
-                  <h1 className="text-3xl font-heading font-light text-void">{circle.name}</h1>
+                  <div className="flex items-center gap-2">
+                    <h1 className="text-3xl font-heading font-light text-void">{circle.name}</h1>
+                    {circle.is_private && (
+                      <Lock className="w-5 h-5 text-void/50" title={t('circles.private')} />
+                    )}
+                  </div>
                   <p className="text-void/60 font-body">{circle.member_count} {circle.member_count === 1 ? t('circles.member') : t('circles.members')}</p>
                 </div>
               </div>
@@ -248,6 +253,35 @@ export default function CircleDetail({ user, onLogout }) {
               </Button>
             )}
           </div>
+
+          {/* Invite Section - Only for creator of private circles */}
+          {isCreator && circle.is_private && (
+            <div className="mt-6 pt-6 border-t border-void/10">
+              <h3 className="text-lg font-heading text-void mb-3 flex items-center gap-2">
+                <UserPlus className="w-5 h-5" />
+                {t('circles.inviteUser')}
+              </h3>
+              <form onSubmit={handleInviteUser} className="flex gap-3">
+                <Input
+                  type="text"
+                  value={inviteEmail}
+                  onChange={(e) => setInviteEmail(e.target.value)}
+                  placeholder={t('circles.invitePlaceholder')}
+                  className="flex-1 bg-white/50 border-transparent focus:border-ethereal focus:ring-2 focus:ring-ethereal/50 rounded-xl"
+                  data-testid="invite-input"
+                />
+                <Button
+                  type="submit"
+                  disabled={inviting || !inviteEmail.trim()}
+                  className="bg-void text-white hover:bg-void/90 rounded-full font-body font-medium"
+                  data-testid="send-invite-button"
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  {inviting ? "..." : t('circles.sendInvite')}
+                </Button>
+              </form>
+            </div>
+          )}
         </div>
 
         {/* Shared Dreams */}
