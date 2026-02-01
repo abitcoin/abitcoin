@@ -538,6 +538,7 @@ export default function DreamDetail({ user, onLogout }) {
                     <option value="finnish">Suomi</option>
                     <option value="french">Français</option>
                     <option value="german">Deutsch</option>
+                    <option value="spanish">Español</option>
                   </select>
                   <Button
                     onClick={handleAIAnalysis}
