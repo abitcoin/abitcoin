@@ -662,7 +662,7 @@ export default function DreamDetail({ user, onLogout }) {
             </>
           ) : (
             <p className="text-void/60 font-body text-center py-8" data-testid="no-ai-analysis">
-              Select a language and click "Analyze Dream" to get AI insights
+              Select a language and click &quot;Analyze Dream&quot; to get AI insights
             </p>
           )}
         </div>
