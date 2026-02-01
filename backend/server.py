@@ -1625,6 +1625,48 @@ async def stripe_webhook(request: Request):
         raise HTTPException(status_code=400, detail=str(e))
 
 # Include the router in the main app
+# Admin Routes (only for owner)
+OWNER_EMAIL = "annelelouarn1@outlook.com"
+
+@api_router.get("/admin/users")
+async def admin_list_users(user_id: str = Depends(get_current_user)):
+    """List all users (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "email": 1})
+    if not user or user["email"] != OWNER_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin access only")
+    
+    users = await db.users.find({}, {"_id": 0, "id": 1, "email": 1, "name": 1, "is_premium": 1, "created_at": 1}).to_list(100)
+    return users
+
+@api_router.delete("/admin/users/{email}")
+async def admin_delete_user(email: str, user_id: str = Depends(get_current_user)):
+    """Delete a user by email (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "email": 1})
+    if not user or user["email"] != OWNER_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin access only")
+    
+    if email == OWNER_EMAIL:
+        raise HTTPException(status_code=400, detail="Cannot delete owner account")
+    
+    result = await db.users.delete_one({"email": email})
+    if result.deleted_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"message": f"User {email} deleted", "deleted": True}
+
+@api_router.post("/admin/users/{email}/premium")
+async def admin_set_premium(email: str, is_premium: bool = True, user_id: str = Depends(get_current_user)):
+    """Set premium status for a user (admin only)"""
+    user = await db.users.find_one({"id": user_id}, {"_id": 0, "email": 1})
+    if not user or user["email"] != OWNER_EMAIL:
+        raise HTTPException(status_code=403, detail="Admin access only")
+    
+    result = await db.users.update_one({"email": email}, {"$set": {"is_premium": is_premium}})
+    if result.matched_count == 0:
+        raise HTTPException(status_code=404, detail="User not found")
+    
+    return {"message": f"User {email} premium set to {is_premium}", "updated": True}
+
 app.include_router(api_router)
 
 app.add_middleware(
