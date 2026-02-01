@@ -120,12 +120,35 @@ export default function CircleDetail({ user, onLogout }) {
     }
   };
 
+  const handleInviteUser = async (e) => {
+    e.preventDefault();
+    if (!inviteEmail.trim()) return;
+    
+    setInviting(true);
+    try {
+      const token = localStorage.getItem('token');
+      await axios.post(
+        `${API}/circles/${circleId}/invite`,
+        { email_or_username: inviteEmail },
+        { headers: { Authorization: `Bearer ${token}` } }
+      );
+      
+      toast.success(t('circles.inviteSent'));
+      setInviteEmail("");
+    } catch (error) {
+      toast.error(error.response?.data?.detail || t('common.error'));
+    } finally {
+      setInviting(false);
+    }
+  };
+
   const formatDate = (dateString) => {
     const date = new Date(dateString);
     return date.toLocaleDateString([], { month: 'short', day: 'numeric' });
   };
 
   const isMember = circle?.member_ids?.includes(user?.id);
+  const isCreator = circle?.creator_id === user?.id;
 
   if (loading) {
     return (
