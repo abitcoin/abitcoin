@@ -99,7 +99,14 @@
     "makePublic": "Jaa yhteisön kanssa",
     "publicDescription": "Salli muiden unelmoijien nähdä tämä uni",
     "saveDream": "Tallenna Uni",
-    "saving": "Tallennetaan..."
+    "saving": "Tallennetaan...",
+    "startRecording": "Aloita sanelu",
+    "stopRecording": "Lopeta sanelu",
+    "listening": "Kuuntelen... Kerro unesi",
+    "recordingStarted": "Kuuntelen... Puhu unesi",
+    "recordingStopped": "Sanelu lopetettu",
+    "speechNotSupported": "Puheentunnistus ei ole tuettu tässä selaimessa",
+    "microphoneNotAllowed": "Mikrofoni estetty. Salli käyttö selaimen asetuksista."
   },
   "dreams": {
     "title": "Unikirjasto",
